@@ -127,3 +127,5 @@ class Regulations:
 class Conversion:
     M_2_FT = 3.28084
     LB_2_KG = 0.4536
+    KM_2_MI = 0.62137
+    KM_2_NM = 0.539957
