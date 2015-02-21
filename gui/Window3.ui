@@ -315,7 +315,7 @@
                    </widget>
                   </item>
                   <item row="4" column="5">
-                   <widget class="QComboBox" name="max_ru_alt_m_comb">
+                   <widget class="QComboBox" name="max_run_alt_m_comb">
                     <item>
                      <property name="text">
                       <string>m</string>
@@ -347,7 +347,7 @@
                    </widget>
                   </item>
                   <item row="0" column="2">
-                   <widget class="QSpinBox" name="atm_msl_isa_t_sb">
+                   <widget class="QSpinBox" name="run_msl_isa_t_sb">
                     <property name="maximum">
                      <number>100</number>
                     </property>
@@ -391,7 +391,14 @@
                    </widget>
                   </item>
                   <item row="1" column="2">
-                   <widget class="QSpinBox" name="atm_alt_isa_t_sb"/>
+                   <widget class="QSpinBox" name="run_alt_isa_t_sb">
+                    <property name="maximum">
+                     <number>100</number>
+                    </property>
+                    <property name="singleStep">
+                     <number>5</number>
+                    </property>
+                   </widget>
                   </item>
                   <item row="1" column="3">
                    <widget class="QLabel" name="label_29">
@@ -485,7 +492,7 @@
                    <widget class="QComboBox" name="bank_ang_deg_comb">
                     <item>
                      <property name="text">
-                      <string>deg  </string>
+                      <string>deg</string>
                      </property>
                     </item>
                     <item>
@@ -585,9 +592,6 @@
                   </item>
                  </widget>
                 </item>
-                <item row="2" column="1">
-                 <widget class="QLineEdit" name="pay_wt_inp"/>
-                </item>
                 <item row="1" column="2">
                  <widget class="QComboBox" name="cargo_kg_comb">
                   <item>
@@ -626,6 +630,13 @@
                  <widget class="QLabel" name="pass_lab">
                   <property name="text">
                    <string>Number of Passengers:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLabel" name="pay_wt_inplab">
+                  <property name="text">
+                   <string>TextLabel</string>
                   </property>
                  </widget>
                 </item>
@@ -1166,38 +1177,5 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>des_rang_km_comb</sender>
-   <signal>currentIndexChanged(QString)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setWindowTitle(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>241</x>
-     <y>95</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>386</x>
-     <y>285</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>des_rang_inp</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>des_rang_lab</receiver>
-   <slot>setText(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>164</x>
-     <y>95</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>72</x>
-     <y>95</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

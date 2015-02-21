@@ -109,4 +109,6 @@ class PlotConst:
         for j in range(self.num_data):
             self.w_by_s.append(PlotConst.wbys_start + 10*j)
 
-
+def calc_payload(r):
+    wt = (data.Historic_param.PASS_WEIGHT+data.Historic_param.PASS_BAG_WEIGHT)*r.pass_num + r.cargo_wt
+    return wt
