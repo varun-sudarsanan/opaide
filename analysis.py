@@ -42,7 +42,7 @@ def class1_estimation(r, a, m):
         wt = (r.payload_wt+r.crew_wt)/(1-ew_f-m.fuel_fraction)
         count += 1
     print "Gross Weight", wt
-    return wt
+    a.gross_weight = wt
 
 def constraint(r,a,m):
     eng_n = a.prop.num_engines

@@ -37,31 +37,10 @@ class MyWindow(QtGui.QMainWindow):
         #self.connect(self.mw.pass_slider, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.change_gross_wt)
 
         self.show()
-    @pyqtSlot()
-    def change_gross_wt(self,pos):
-        n = self.req1.min_pass + 1
-        if n <= self.req1.max_pass:
-            self.aircraft1.pass_n = n # int(pos/(self.req1.max_pass- self.req1.min_pass))
-        se = analysis.class1_estimation(self.req1,self.aircraft1,self.mission1)
-        self.mw.pass_label.setText("Passengers:\n"+QString.number(self.aircraft1.pass_n)) #lf.aircraft1.gross_weight))
-        self.mw.wt_estimate_label.setText("Gross Weight:\n"+QString.number(se)) #lf.aircraft1.gross_weight))
 
     def update_gui(self):
-        self.set_defaults()
-        self.unit_conversions()
-        self.data_input()
-        # #self.mw.min_pass.setText("Min_pass\n"+QString.number(self.req1.min_pass))
-        # self.mw.max_pass.setText("Max_pass\n"+QString.number(self.req1.max_pass))
-        #
-        # self.mw.pass_slider.minimum = self.req1.min_pass
-        # self.mw.pass_slider.maximum = self.req1.max_pass
-        #
-        # self.mw.pass_label.setText("Passengers:\n"+QString.number(self.req1.min_pass))
-        # se = analysis.class1_estimation(self.req1,self.aircraft1,self.mission1)
-        # self.mw.wt_estimate_label.setText("Gross Weight:\n"+QString.number(se))
-        # self.aircraft1.gross_weight = se
-        # self.update_objects()
-
+        self.requirements()
+        self.mission()
     def create_objects(self):
         self.req1 = req.AircraftRequirements()
         self.aircraft1 = config.Aircraft()
@@ -81,167 +60,19 @@ class MyWindow(QtGui.QMainWindow):
         self.mission1.update_mission()
 
     def requirements(self):
-        print "Requirements"
-        print "=====**====="
-        t = 0
-        while t ==0:
-            st = raw_input("Enter design range: (km) ")
-            if self.isfloat(st):
-                self.req1.design_range = float(st)
-                t = 1
-            else:
-                print "Please enter a number"
-        t = 0
-        while t ==0:
-            st = raw_input("Enter max. stall velocity: (m/s) ")
-            if self.isfloat(st):
-                self.req1.v_stall_max = float(st)
-                t = 1
-            else:
-                print "Please enter a number"
-
-        t = 0
-        while t == 0:
-            st = raw_input("Enter minimum number of passengers:")
-            if st.isdigit():
-                self.req1.min_pass = int(st)
-                self.aircraft1.pass_n = self.req1.min_pass
-                t = 1
-            else:
-                print "Please enter a valid number"
-
-        t = 0
-        while t ==0:
-            st = raw_input("Enter maximum number of passengers:")
-            if st.isdigit():
-                self.req1.max_pass = int(st)
-                t = 1
-            else:
-                print "Please enter a valid number"
-
-        t = 0
-        while t ==0:
-            st = raw_input("Enter the cargo weight to be carried: (kg)")
-            if self.isfloat(st):
-                self.req1.cargo_wt = float(st)
-                t = 1
-            else:
-                print "Please enter a number"
-
-        t = 0
-        while t == 0:
-            st = raw_input("Enter the maximum takeoff distance available: (m)")
-            if self.isfloat(st):
-                self.req1.to_distance = float(st)
-                t = 1
-            else:
-                print "Please enter a number"
-
-        t = 0
-        while t ==0:
-            st = raw_input("Enter the maximum landing distance available: (m)")
-            if self.isfloat(st):
-                self.req1.la_distance = float(st)
-                t = 1
-            else:
-                print "Please enter a number"
-        print "\n"
+        self.req_set_defaults()
+        self.req_unit_conversions()
+        self.req_data_input()
 
     def mission(self):
-        print "Mission Definition"
-        print "========**========"
-        t=0
-        while t==0:
-            num = raw_input("Enter the number of mission segments:")
-            if num.isdigit():
-                self.mission1.define_mission(int(num))
-                t = 1
-            else:
-                print "Please enter a number"
-        i=0
-        while i < self.mission1.segments_num:
-            segment = self.mission1.segments[i]
-            segment.type = raw_input("Enter the type of segment for segment "+str(i+1) + " (takeoff, climb, cruise, loiter, descent, landing)")
-            if segment.type == "takeoff":
-                t = 0
-                while t == 0:
-                    st = raw_input("Enter runway altitude: (m)")
-                    if self.isfloat(st):
-                        segment.altitude = float(st)
-                        t = 1
-                        segment.range = self.req1.to_distance
-                    else:
-                        print "Please enter a number"
-            elif segment.type == "climb":
-                t = 0
-                while t == 0:
-                    st = raw_input("Enter the altitude to which it climbs: (m)")
-                    if self.isfloat(st):
-                        segment.altitude = float(st)
-                        t = 1
-                    else:
-                        print "Please enter a number"
-            elif segment.type == "cruise":
-                t = 0
-                while t == 0:
-                    st = raw_input("Enter the distance traversed during this segment: (km)")
-                    if self.isfloat(st):
-                        segment.range = float(st)
-                        t = 1
-                    else:
-                        print "Please enter a number"
-            elif segment.type == "loiter":
-                t = 0
-                while t == 0:
-                    st = raw_input("Enter the loiter duration: (hr)")
-                    if self.isfloat(st): #(st.isdigit()):
-                        segment.time = float(st)
-                        t = 1
-                    else:
-                        print "Please enter a number"
-            elif segment.type == "descent":
-                t = 0
-                while t == 0:
-                    st = raw_input("Enter the altitude at the end of segment: (m)")
-                    if self.isfloat(st):
-                        segment.altitude = float(st)
-                        t = 1
-                    else:
-                        print "Please enter a number"
-            elif segment.type == "landing":
-                t = 0
-                while t == 0:
-                    st = raw_input("Enter the altitude of the runway: (m)")
-                    if self.isfloat(st):
-                        segment.altitude = float(st)
-                        t = 1
-                        segment.range = self.req1.la_distance
-                    else:
-                        print "Please enter a number"
-                t=0
-                while t == 0:
-                    st = raw_input("Enter the max. obstacle height near the runway: (m)")
-                    if self.isfloat(st):
-                        self.mission1.h_obs = float(st)
-                        t = 1
-                    else:
-                        print "Please enter a number"
-                t=0
-                while t == 0:
-                    st = raw_input("Enter the approach angle: (deg)")
-                    if self.isfloat(st):
-                        self.mission1.app_ang = float(st)
-                        t = 1
-                        self.mission1.app_dist = self.mission1.h_obs/math.tan(self.mission1.app_ang*math.pi/180)
-                    else:
-                        print "Please enter a number"
-            else:
-                i -= 1
-                print "Incorrect segment type"
-            i += 1
-            print i
-
-    def set_defaults(self):
+        self.miss_set_defaults()
+        self.miss_segments()
+        self.miss_unit_conversions()
+        self.miss_data_inputs()
+        self.mission_profile()
+        self.connect(self.mw.add_seg_push, QtCore.SIGNAL(_fromUtf8("clicked()")), self.add_seg_push)
+        self.connect(self.mw.rem_seg_push, QtCore.SIGNAL(_fromUtf8("clicked()")), self.rem_seg_push)
+    def req_set_defaults(self):
 
         # Requirements Tab
         self.mw.des_rang_inp.setText(QString.number(self.req1.design_range))
@@ -266,13 +97,12 @@ class MyWindow(QtGui.QMainWindow):
         # Mission Definition Tab
 
         self.mw.miss_nam_inp.setText(self.mission1.name)
-        self.mw.num_miss_inp.setText(QString.number(self.mission1.segments_num))
         self.mw.alt_beg_inp.setText(QString.number(self.mission1.segments[0].y_pos_start))
         self.mw.rang_seg_inp.setText(QString.number(self.mission1.segments[0].range))
         self.mw.ht_seg_inp.setText(QString.number(self.mission1.segments[0].height))
         self.mw.time_seg_inp.setText(QString.number(self.mission1.segments[0].time))
 
-    def unit_conversions(self):
+    def req_unit_conversions(self):
         self.connect(self.mw.des_rang_km_comb, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.des_rang_km_comb)
         self.connect(self.mw.des_rang_payload_kg_comb, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.des_rang_payload_kg_comb)
         self.connect(self.mw.ser_ceil_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.ser_ceil_m_comb)
@@ -291,7 +121,7 @@ class MyWindow(QtGui.QMainWindow):
         self.connect(self.mw.fuel_res_km_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.fuel_res_km_comb)
         self.connect(self.mw.cargo_kg_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.cargo_kg_comb)
 
-    def data_input(self):
+    def req_data_input(self):
         self.connect(self.mw.des_rang_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.des_rang_inp)
         self.connect(self.mw.des_rang_payload_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.des_rang_payload_inp)
         self.connect(self.mw.serv_ceil_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.serv_ceil_inp)
@@ -318,10 +148,150 @@ class MyWindow(QtGui.QMainWindow):
         self.connect(self.mw.run_alt_isa_t_sb, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.run_alt_isa_t_sb)
 
         # Combo Boxes
-        self.connect(self.mw.reg_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.reg_comb)
+        self.connect(self.mw.set_req_push,QtCore.SIGNAL(_fromUtf8("clicked()")),self.set_req_push)
+        #self.connect(self.mw.reg_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.reg_comb)
 
+    def miss_set_defaults(self):
+        self.counter = 0
+        self.mw.miss_nam_inp.setText(self.mission1.name)
+        self.mw.alt_beg_inp.setText(QString.number(self.mission1.segments[self.counter].y_pos_start))
+
+    def miss_segments(self):
+        i = self.counter % 6
+        self.mw.typ_seg_comb.setCurrentIndex(i)
+        self.mw.rang_seg_inp.setText(QString.number(self.mission1.segments[self.counter].range))
+        self.mw.ht_seg_inp.setText(QString.number(self.mission1.segments[self.counter].height))
+        self.mw.time_seg_inp.setText(QString.number(self.mission1.segments[self.counter].time))
+
+    def miss_data_inputs(self):
+        self.connect(self.mw.miss_nam_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.miss_nam_inp)
+        self.connect(self.mw.alt_beg_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.alt_beg_inp)
+
+        self.connect(self.mw.typ_seg_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.typ_seg_comb)
+        self.connect(self.mw.rang_seg_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.rang_seg_inp)
+        self.connect(self.mw.ht_seg_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.ht_seg_inp)
+        self.connect(self.mw.time_seg_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.time_seg_inp)
+
+        self.connect(self.mw.ana_miss_push, QtCore.SIGNAL(_fromUtf8("clicked()")), self.ana_miss_push)
+
+
+
+    def miss_unit_conversions(self):
+        self.connect(self.mw.alt_beg_seg_m_comb, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.alt_beg_seg_m_comb)
+        self.connect(self.mw.rang_seg_m_comb, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.rang_seg_m_comb)
+        self.connect(self.mw.ht_seg_m_comb, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.ht_seg_m_comb)
+        self.connect(self.mw.time_seg_hr_comb, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.time_seg_hr_comb)
+
+    def mission_profile(self):
+        self.mw.time_seg_inp.setDisabled(True)
+        self.profile = self.mw.mission_graphics
+        w = self.profile.width()
+        h = self.profile.height()
+        self.x1=0
+        self.y1=0
+        self.x2=0
+        self.y2=0
+        self.horiz_pos = w/2
+        self.vert_pos = h*2
+        self.current_horiz = -w/2
+        self.current_vert = (h/2 - self.vert_pos)
+        self.scene = QtGui.QGraphicsScene()
+        self.lines = []
+    # Push Buttons
+    @pyqtSlot()
+    def add_seg_push(self):
+        self.mission1.segments[self.counter].type = self.mw.typ_seg_comb.currentText()
+        self.draw_segment()
+        self.counter += 1
+        if self.counter >= self.mission1.segments_num:
+            self.mission1.segments.append(mission.MissionPhase())
+            self.mission1.segments_num += 1
+        self.miss_segments()
+
+    @pyqtSlot()
+    def rem_seg_push(self):
+        if self.counter == 0:
+            pass
+        else:
+            self.counter -= 1
+            self.mission1.segments_num -= 1
+            self.delete_segment()
+            self.miss_segments()
+
+    @pyqtSlot()
+    def ana_miss_push(self):
+        self.update_objects()
+        analysis.class1_estimation(self.req1,self.aircraft1,self.mission1)
+
+        print "After Analysis", self.aircraft1.gross_weight
+
+    # Graphics View
+    def delete_segment(self):
+        self.lines[self.counter].setLine(0,0,0,0)
+        phase = self.mission1.segments[self.counter].type
+        if phase == "Takeoff":
+            self.current_horiz = self.current_horiz - self.horiz_pos/2
+        elif phase == "Climb":
+            self.current_horiz = self.current_horiz - self.horiz_pos/2
+            self.current_vert = self.current_vert + self.vert_pos
+        elif phase == "Cruise":
+            self.current_horiz = self.current_horiz - self.horiz_pos
+        elif phase == "Loiter":
+            self.current_horiz = self.current_horiz - self.horiz_pos/4
+            self.current_vert = self.current_vert - self.vert_pos/2
+        elif phase == "Descent":
+            self.current_horiz = self.current_horiz - self.horiz_pos/4
+            self.current_vert = self.current_vert - self.vert_pos/2
+        elif phase == "Landing":
+            self.current_horiz = self.current_horiz - self.horiz_pos/2
+        self.scene.removeItem(self.lines[self.counter])
+
+    def draw_segment(self):
+        self.lines.append(QtGui.QGraphicsLineItem())
+        phase = self.mission1.segments[self.counter].type
+
+        if phase == "Takeoff":
+            self.x1 = self.current_horiz
+            self.x2 = self.current_horiz + self.horiz_pos/2
+            self.y1 = self.current_vert
+            self.y2 = self.current_vert
+            # print self.x1
+            # print
+        elif phase == "Climb":
+            self.x1 = self.current_horiz
+            self.x2 = self.current_horiz + self.horiz_pos/2
+            self.y1 = self.current_vert
+            self.y2 = self.current_vert - self.vert_pos
+        elif phase == "Cruise":
+            self.x1 = self.current_horiz
+            self.x2 = self.current_horiz + self.horiz_pos
+            self.y1 = self.current_vert
+            self.y2 = self.current_vert
+        elif phase == "Loiter":
+            self.x1 = self.current_horiz
+            self.x2 = self.current_horiz + self.horiz_pos/4
+            self.y1 = self.current_vert
+            self.y2 = self.current_vert + self.vert_pos/2
+        elif phase == "Descent":
+            self.x1 = self.current_horiz
+            self.x2 = self.current_horiz + self.horiz_pos/4
+            self.y1 = self.current_vert
+            self.y2 = self.current_vert + self.vert_pos/2
+        elif phase == "Landing":
+            self.x1 = self.current_horiz
+            self.x2 = self.current_horiz + self.horiz_pos/2
+            self.y1 = self.current_vert
+            self.y2 = self.current_vert
+        self.lines[self.counter].setLine(self.x1,self.y1,self.x2,self.y2)
+        self.current_horiz = self.x2
+        self.current_vert = self.y2
+
+        self.scene.addItem(self.lines[self.counter])
+        self.profile.setScene(self.scene)
 
     # Data Input Slots
+
+    # Requirements Tab
     @pyqtSlot()
     def des_rang_inp(self, text):
         if self.isfloat(text):
@@ -545,10 +515,6 @@ class MyWindow(QtGui.QMainWindow):
             input_warn.exec_()
 
     @pyqtSlot()
-    def reg_comb(self, reg):
-        self.req1.regulation = reg
-
-    @pyqtSlot()
     def fuel_res_inp(self, text):
         if self.isfloat(text):
             if self.mw.fuel_res_km_comb.currentText() == "km":
@@ -601,8 +567,109 @@ class MyWindow(QtGui.QMainWindow):
              self.req1.cargo_wt = 0
              input_warn.exec_()
 
+    # Mission Tab
+    @pyqtSlot()
+    def miss_nam_inp(self, text):
+        self.mission1.name = text
+
+    @pyqtSlot()
+    def alt_beg_inp(self, alt):
+        if self.isfloat(alt):
+            if self.mw.alt_beg_seg_m_comb.currentText() == "m":
+                self.mission1.segments[self.counter].y_pos_start = float(alt)
+            else:
+                self.mission1.segments[self.counter].y_pos_start = float(alt)/data.Conversion.M_2_FT
+        elif alt == "":
+            pass
+        else:
+            input_warn = QtGui.QMessageBox()
+            input_warn.setText("Please enter a number"+" in "+self.mw.alt_beg_lab.text())
+            self.mw.alt_beg_inp.setText("0")
+            self.mission1.segments[self.counter].y_pos_start = 0
+            input_warn.exec_()
+
+    @pyqtSlot()
+    def rang_seg_inp(self, dist):
+        if self.isfloat(dist):
+            if self.mw.rang_seg_m_comb.currentText() == "m":
+                self.mission1.segments[self.counter].range = float(dist)
+            else:
+                self.mission1.segments[self.counter].range = float(dist)/data.Conversion.M_2_FT
+        elif dist == "":
+            pass
+        else:
+            input_warn = QtGui.QMessageBox()
+            input_warn.setText("Please enter a number"+" in "+self.mw.rang_seg_lab.text())
+            self.mw.rang_seg_inp.setText("0")
+            self.mission1.segments[self.counter].range = 0
+            input_warn.exec_()
+
+    @pyqtSlot()
+    def ht_seg_inp(self, ht):
+        if self.isfloat(ht):
+            if self.mw.ht_seg_m_comb.currentText() == "m":
+                self.mission1.segments[self.counter].height = float(ht)
+            else:
+                self.mission1.segments[self.counter].height = float(ht)/data.Conversion.M_2_FT
+        elif ht == "":
+            pass
+        else:
+            input_warn = QtGui.QMessageBox()
+            input_warn.setText("Please enter a number"+" in "+self.mw.ht_seg_lab.text())
+            self.mw.ht_seg_inp.setText("0")
+            self.mission1.segments[self.counter].height = 0
+            input_warn.exec_()
+
+    @pyqtSlot()
+    def time_seg_inp(self, t):
+        if self.isfloat(t):
+            if self.mw.time_seg_hr_comb.currentText() == "hr":
+                self.mission1.segments[self.counter].time = float(t)
+            else:
+                self.mission1.segments[self.counter].time = float(t)/data.Conversion.HR_2_MIN
+        elif t == "":
+            pass
+        else:
+            input_warn = QtGui.QMessageBox()
+            input_warn.setText("Please enter a number"+" in "+self.mw.time_seg_lab.text())
+            self.mw.time_seg_inp.setText("0")
+            self.mission1.segments[self.counter].time = 0
+            input_warn.exec_()
+
+    @pyqtSlot()
+    def typ_seg_comb(self, segment):
+        if segment == "Takeoff":
+            self.mw.rang_seg_inp.setDisabled(False)
+            self.mw.ht_seg_inp.setDisabled(False)
+            self.mw.time_seg_inp.setDisabled(True)
+        elif segment == "Climb":
+            self.mw.rang_seg_inp.setDisabled(False)
+            self.mw.ht_seg_inp.setDisabled(False)
+            self.mw.time_seg_inp.setDisabled(True)
+        elif segment == "Cruise":
+            self.mw.rang_seg_inp.setDisabled(False)
+            self.mw.ht_seg_inp.setDisabled(False)
+            self.mw.time_seg_inp.setDisabled(True)
+        elif segment == "Loiter":
+            self.mw.rang_seg_inp.setDisabled(True)
+            self.mw.ht_seg_inp.setDisabled(True)
+            self.mw.time_seg_inp.setDisabled(False)
+        elif segment == "Descent":
+            self.mw.rang_seg_inp.setDisabled(False)
+            self.mw.ht_seg_inp.setDisabled(False)
+            self.mw.time_seg_inp.setDisabled(True)
+        elif segment == "Landing":
+            self.mw.rang_seg_inp.setDisabled(False)
+            self.mw.ht_seg_inp.setDisabled(False)
+            self.mw.time_seg_inp.setDisabled(True)
     # Unit conversion Slots
     # ========****=========
+
+    # Requirements Tab
+    @pyqtSlot()
+    def set_req_push(self):
+        self.req1.regulation = self.mw.reg_comb.currentText()
+
     @pyqtSlot()
     def des_rang_km_comb(self, dist):
         if dist == "mi":
@@ -720,6 +787,41 @@ class MyWindow(QtGui.QMainWindow):
             self.mw.cargo_inp.setText(QString.number(g))
          else:
             self.mw.cargo_inp.setText(QString.number(self.req1.cargo_wt))
+    # Mission Tab
+
+    @pyqtSlot()
+    def alt_beg_seg_m_comb(self, dist):
+        if dist == "ft":
+            g = self.mission1.segments[self.counter].y_pos_start*data.Conversion.M_2_FT
+            self.mw.alt_beg_inp.setText(QString.number(g))
+        else:
+            self.mw.alt_beg_inp.setText(QString.number(self.mission1.segments[self.counter].y_pos_start))
+
+    @pyqtSlot()
+    def rang_seg_m_comb(self, dist):
+        if dist == "ft":
+            g = self.mission1.segments[self.counter].range*data.Conversion.M_2_FT
+            self.mw.rang_seg_inp.setText(QString.number(g))
+        else:
+            self.mw.rang_seg_inp.setText(QString.number(self.mission1.segments[self.counter].range))
+
+    @pyqtSlot()
+    def ht_seg_m_comb(self, ht):
+        if ht == "ft":
+            g = self.mission1.segments[self.counter].height*data.Conversion.M_2_FT
+            self.mw.ht_seg_inp.setText(QString.number(g))
+        else:
+            self.mw.ht_seg_inp.setText(QString.number(self.mission1.segments[self.counter].height))
+
+    @pyqtSlot()
+    def time_seg_hr_comb(self, t):
+        if t == "hr":
+            self.mw.time_seg_inp.setText(QString.number(self.mission1.segments[self.counter].time))
+        else:
+            g = self.mission1.segments[self.counter].time*data.Conversion.HR_2_MIN
+            self.mw.time_seg_inp.setText(QString.number(g))
+
+    # Assisting Functions
 
     def isfloat(self,value):
         try:

@@ -3,7 +3,7 @@ import math
 
 class MissionPhase:
     def __init__(self):
-        self.type = "takeoff"
+        self.type = "Takeoff"
         self.x_pos_start = 0.0
         self.x_pos_end = 0.0
         self.y_pos_start = 0.0

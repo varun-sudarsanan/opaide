@@ -131,3 +131,4 @@ class Conversion:
     KM_2_NM = 0.539957
     MPERS_2_FTPERMIN = M_2_FT*60
     DEG_2_RAD = math.pi/180
+    HR_2_MIN = 60
