@@ -65,6 +65,7 @@ class MyWindow(QtGui.QMainWindow):
         self.mission_profile()
         self.connect(self.mw.add_seg_push, QtCore.SIGNAL(_fromUtf8("clicked()")), self.add_seg_push)
         self.connect(self.mw.rem_seg_push, QtCore.SIGNAL(_fromUtf8("clicked()")), self.rem_seg_push)
+
     def req_set_defaults(self):
 
         # Requirements Tab
@@ -135,7 +136,7 @@ class MyWindow(QtGui.QMainWindow):
         self.connect(self.mw.fuel_res_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.fuel_res_inp)
         self.connect(self.mw.pass_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.pass_inp)
         self.connect(self.mw.cargo_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.cargo_inp)
-
+        self.connect(self.mw.engine_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.engine_inp)
         # Spin boxes
         self.connect(self.mw.roc_isa_t_sb, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.roc_isa_t_sb)
         self.connect(self.mw.run_msl_isa_t_sb, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.run_msl_isa_t_sb)
@@ -167,8 +168,6 @@ class MyWindow(QtGui.QMainWindow):
         self.connect(self.mw.time_seg_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.time_seg_inp)
 
         self.connect(self.mw.ana_miss_push, QtCore.SIGNAL(_fromUtf8("clicked()")), self.ana_miss_push)
-
-
 
     def miss_unit_conversions(self):
         self.connect(self.mw.alt_beg_seg_m_comb, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.alt_beg_seg_m_comb)
@@ -312,8 +311,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.des_rang_lab.text())
-            self.mw.des_rang_inp.setText("0")
-            self.req1.design_range = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -328,8 +325,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.des_rang_payload_lab.text())
-            self.mw.des_rang_payload_inp.setText("0")
-            self.req1.des_rang_payload = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -344,8 +339,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.serv_ceil_lab.text())
-            self.mw.serv_ceil_inp.setText("0")
-            self.req1.service_ceil = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -360,8 +353,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.roc_lab.text())
-            self.mw.roc_inp.setText("0")
-            self.req1.roc = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -373,8 +364,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.cruise_m_lab.text())
-            self.mw.cruise_m_inp.setText("0")
-            self.req1.cruise_mach = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -393,8 +382,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.tod_land_lab.text())
-            self.mw.tod_land_inp.setText("0")
-            self.req1.to_distance_land = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -409,8 +396,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.tod_water_lab.text())
-            self.mw.tod_water_inp.setText("0")
-            self.req1.to_distance_water = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -425,8 +410,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.lan_land_lab.text())
-            self.mw.lan_land_inp.setText("0")
-            self.req1.la_distance_land = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -441,8 +424,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.lan_water_lab.text())
-            self.mw.lan_water_inp.setText("0")
-            self.req1.la_distance_water = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -460,8 +441,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.max_run_alt_lab.text())
-            self.mw.max_run_alt_inp.setText("0")
-            self.req1.max_run_alt = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -484,8 +463,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.inst_lab.text())
-            self.mw.inst_inp.setText("0")
-            self.req1.inst_turn = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -500,8 +477,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.sus_lab.text())
-            self.mw.sus_inp.setText("0")
-            self.req1.sus_turn = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -516,8 +491,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.bank_ang_lab.text())
-            self.mw.bank_ang_inp.setText("0")
-            self.req1.bank_ang = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -534,8 +507,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.fuel_res_lab.text())
-            self.mw.fuel_res_inp.setText("0")
-            self.req1.fuel_res_rang = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -550,8 +521,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.pass_lab.text())
-            self.mw.pass_inp.setText("0")
-            self.req1.pass_num = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -568,9 +537,18 @@ class MyWindow(QtGui.QMainWindow):
          else:
              input_warn = QtGui.QMessageBox()
              input_warn.setText("Please enter a number"+" in "+self.mw.cargo_lab.text())
-             self.mw.cargo_inp.setText("0")
-             self.req1.cargo_wt = 0
              input_warn.exec_()
+
+    @pyqtSlot()
+    def engine_inp(self, num):
+        if self.isdigit(num):
+            self.aircraft1.prop.engines_num = int(num)
+        elif num == "":
+            pass
+        else:
+            input_warn = QtGui.QMessageBox()
+            input_warn.setText("Please enter a number"+" in "+self.mw.engine_lab.text())
+            input_warn.exec_()
 
     # Mission Tab
     @pyqtSlot()
@@ -589,8 +567,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.alt_beg_lab.text())
-            self.mw.alt_beg_inp.setText("0")
-            self.mission1.segments[self.counter].y_pos_start = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -607,8 +583,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.rang_seg_lab.text())
-            self.mw.rang_seg_inp.setText("0")
-            self.mission1.segments[self.counter].range = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -625,8 +599,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.ht_seg_lab.text())
-            self.mw.ht_seg_inp.setText("0")
-            self.mission1.segments[self.counter].height = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -641,8 +613,6 @@ class MyWindow(QtGui.QMainWindow):
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number"+" in "+self.mw.time_seg_lab.text())
-            self.mw.time_seg_inp.setText("0")
-            self.mission1.segments[self.counter].time = 0
             input_warn.exec_()
 
     @pyqtSlot()
@@ -678,6 +648,14 @@ class MyWindow(QtGui.QMainWindow):
     @pyqtSlot()
     def set_req_push(self):
         self.req1.regulation = self.mw.reg_comb.currentText()
+        print "Before"
+        analysis.constraint(self.req1,self.aircraft1,self.mission1)
+        print "After"
+        self.constraint_plots = []
+        for i in range(len(self.req1.constraints)):
+            self.constraint_plots.append(self.mw.pw.plot())
+            self.constraint_plots[i].setPen((200,200,100))
+            self.constraint_plots[i].setData(y = self.req1.constraints[i].t_by_w, x = self.req1.constraints[i].w_by_s)
 
     @pyqtSlot()
     def des_rang_km_comb(self, dist):
@@ -801,10 +779,10 @@ class MyWindow(QtGui.QMainWindow):
     @pyqtSlot()
     def alt_beg_seg_m_comb(self, dist):
         if dist == "ft":
-            g = self.mission1.segments[self.counter].y_pos_start*data.Conversion.M_2_FT
+            g = self.mission1.segments[0].y_pos_start*data.Conversion.M_2_FT
             self.mw.alt_beg_inp.setText(QString.number(g))
         else:
-            self.mw.alt_beg_inp.setText(QString.number(self.mission1.segments[self.counter].y_pos_start))
+            self.mw.alt_beg_inp.setText(QString.number(self.mission1.segments[0].y_pos_start))
 
     @pyqtSlot()
     def rang_seg_m_comb(self, dist):
@@ -851,6 +829,10 @@ class MyWindow(QtGui.QMainWindow):
             return True
         except ValueError:
             return False
+
+
+    # Graph for constraint analysis
+
 
 
 

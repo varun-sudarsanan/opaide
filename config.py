@@ -22,7 +22,7 @@ class Aircraft:
         self.c_jet_cruise = (c_pow_cruise*data.Historic_param.TP_CRUISE*5)/(data.Historic_param.PROP_EFF*18)
         self.c_jet_loiter = (c_pow_loiter*data.Historic_param.TP_CRUISE*5)/(data.Historic_param.PROP_EFF*18)
 
-        self.v_stall = 0
+        self.v_stall = 25.2
         self.v_cruise = data.Historic_param.TP_CRUISE*5/18
         self.v_climb = data.Historic_param.CLIMB_STALL*self.v_stall
 
@@ -96,7 +96,7 @@ class Aircraft:
 
     class PowerPlant:
         def __init__(self):
-            self.engines_num = 1
+            self.engines_num = 2
 
     def update_config(self):
         print "update_config"

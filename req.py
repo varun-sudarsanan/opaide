@@ -1,5 +1,6 @@
 __author__ = 'Varun S S'
 import data
+import math
 
 class AircraftRequirements:
     # Performance Requirements
@@ -43,16 +44,15 @@ class AircraftRequirements:
 
 
         self.regulation = "FAR 23"
+        self.constraints = []
+
+        self.h_obs = 15.24          # m
+        self.app_ang = 9.0            # degree
+        self.app_dist = self.h_obs*math.tan(self.app_ang*180/math.pi)
+
 
     def attend_num(self,pas):
         return (pas-1)/30 + 1
 
     def update_req(self,a):
         self.attend_n = self.attend_num(a.pass_n)
-
-    # Determined values
-
-    # def climb_constr(t_by_w):
-    # "Function to determine wing-loading constraint imposed by thrust to weight ratio"
-    #
-    # climb_grad = roc/v_climb

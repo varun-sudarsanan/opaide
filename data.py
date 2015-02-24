@@ -25,19 +25,22 @@ class Atmospheric_param:
     @staticmethod
     def temp(alt):
         if alt <= 11000:
-            return Atmospheric_param.T_ISA + Atmospheric_param.TROP_LAPSE^alt
+            return Atmospheric_param.T_ISA + Atmospheric_param.TROP_LAPSE*alt
         elif alt <=20000:
             return Atmospheric_param.T_ISA + Atmospheric_param.TROP_LAPSE*11000
         else:
             return 0
-    def pres(self,alt):
-        return (Atmospheric_param.P_ISA*math.pow((self.temp(alt)/self.T_ISA),(self.g*self.M_air/(self.R*self.TROP_LAPSE*1000))))
+    @staticmethod
+    def pres(alt):
+        return (Atmospheric_param.P_ISA*math.pow((Atmospheric_param.temp(alt)/Atmospheric_param.T_ISA),(Atmospheric_param.g*Atmospheric_param.M_air/(Atmospheric_param.R*Atmospheric_param.TROP_LAPSE*1000))))
 
-    def rho(self,alt):
-        return (self.pres(alt)*self.M_air/(self.R*self.temp(alt)))
+    @staticmethod
+    def rho(alt):
+        return (Atmospheric_param.pres(alt)*Atmospheric_param.M_air/(Atmospheric_param.R*Atmospheric_param.temp(alt)))
 
-    def speed_sound(self,alt):
-        return (math.sqrt(self.GAMMA_AIR*self.R*self.temp(alt)))
+    @staticmethod
+    def speed_sound(alt):
+        return (math.sqrt(Atmospheric_param.GAMMA_AIR*Atmospheric_param.R*Atmospheric_param.temp(alt)))
 
 class Historic_param:
     # Constants from historic data
@@ -108,21 +111,31 @@ class Historic_param:
 
 class Regulations:
     # Climb Gradients
-    def SSCG(self,n):
-        if n >= 4:
-            return 0.030
-        elif n == 3:
-            return 0.027
-        else:
-            return 0.024
-
-    def MAG(self,n):
-        if n >= 4:
-            return 0.027
-        elif n == 3:
-            return 0.024
-        else:
-            return 0.021
+    @staticmethod
+    def SSCG(reg,n):
+        if reg == "FAR 25":
+            if n >= 4:
+                return 0.030
+            elif n == 3:
+                return 0.027
+            else:
+                return 0.024
+        elif reg == "FAR 23":
+            if n >= 4:
+                return 0.026
+            elif n == 3:
+                return 0.023
+            else:
+                return 0.020
+    @staticmethod
+    def MAG(reg,n):
+        if reg == "FAR 25" or reg == "FAR 23":
+            if n >= 4:
+                return 0.027
+            elif n == 3:
+                return 0.024
+            else:
+                return 0.021
 
 class Conversion:
     LB_2_KG = 0.4536
@@ -132,7 +145,11 @@ class Conversion:
     KM_2_NM = 0.539957
     KM_2_M = 1000
 
-    MPERS_2_FTPERMIN = M_2_FT*60
     DEG_2_RAD = math.pi/180
     HR_2_MIN = 60
+
+    MPERS_2_FTPERMIN = M_2_FT*60
+
+    LBFT2_2_KGM2 = LB_2_KG*math.pow(M_2_FT,2)
+
 

@@ -20,9 +20,6 @@ class MissionDef:
         self.segments_num = 6
         self.segments = []
         self.fuel_fraction = 1.0
-        self.h_obs = 15.24          # m
-        self.app_ang = 9.0            # degree
-        self.app_dist = self.h_obs*math.tan(self.app_ang*180/math.pi)
         self.define_mission(self.segments_num)
 
     def define_mission(self,num):
