@@ -4,7 +4,8 @@ import math
 
 
 def class1_estimation(r, a, m):
-    r.payload_wt = (data.Historic_param.PASS_WEIGHT+data.Historic_param.PASS_BAG_WEIGHT)*a.pass_n + r.cargo_wt  # kg  --> For Tourism ops
+    # r.payload_wt = (data.Historic_param.PASS_WEIGHT+data.Historic_param.PASS_BAG_WEIGHT)*a.pass_n + r.cargo_wt  # kg  --> For Tourism ops
+    calc_payload(r)
     r.crew_wt = data.Historic_param.PILOT_WEIGHT*r.pilots_n + data.Historic_param.CABIN_CREW_WEIGHT*r.attend_n + data.Historic_param.CREW_BAG_WEIGHT*(r.pilots_n+r.attend_n)  # kg --> For Tourism ops
 
     wt = 4*r.payload_wt
@@ -12,15 +13,15 @@ def class1_estimation(r, a, m):
 
     f = 1
     for i in range(m.segments_num):
-        if m.segments[i].type ==  "takeoff":
+        if m.segments[i].type ==  "Takeoff":
             m.segments[i].wf = data.Historic_param.TAKEOFF_WF
-        elif m.segments[i].type == "climb":
+        elif m.segments[i].type == "Climb":
             m.segments[i].wf = data.Historic_param.CLIMB_WF
-        elif m.segments[i].type == "cruise":
-            m.segments[i].wf = 1/math.exp(m.segments[i].range*1000*a.c_jet_cruise*math.pow(10,-6)/(a.v_cruise*a.l_by_d_cruise))
-        elif m.segments[i].type == "loiter":
+        elif m.segments[i].type == "Cruise":
+            m.segments[i].wf = 1/math.exp(m.segments[i].range*a.c_jet_cruise*math.pow(10,-6)/(a.v_cruise*a.l_by_d_cruise))
+        elif m.segments[i].type == "Loiter":
             m.segments[i].wf = 1/math.exp(m.segments[i].time*60*60*a.c_jet_loiter*math.pow(10,-6)/a.l_by_d_loiter)
-        elif m.segments[i].type == "descent":
+        elif m.segments[i].type == "Descent":
             m.segments[i].wf = data.Historic_param.DESCENT_WF
         else:
             m.segments[i].wf = data.Historic_param.LANDING_WF
@@ -110,5 +111,4 @@ class PlotConst:
             self.w_by_s.append(PlotConst.wbys_start + 10*j)
 
 def calc_payload(r):
-    wt = (data.Historic_param.PASS_WEIGHT+data.Historic_param.PASS_BAG_WEIGHT)*r.pass_num + r.cargo_wt
-    return wt
+    r.payload_wt = (data.Historic_param.PASS_WEIGHT+data.Historic_param.PASS_BAG_WEIGHT)*r.pass_num + r.cargo_wt

@@ -125,10 +125,14 @@ class Regulations:
             return 0.021
 
 class Conversion:
-    M_2_FT = 3.28084
     LB_2_KG = 0.4536
+
+    M_2_FT = 3.28084
     KM_2_MI = 0.62137
     KM_2_NM = 0.539957
+    KM_2_M = 1000
+
     MPERS_2_FTPERMIN = M_2_FT*60
     DEG_2_RAD = math.pi/180
     HR_2_MIN = 60
+

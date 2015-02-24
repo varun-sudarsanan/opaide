@@ -32,7 +32,7 @@ class AircraftRequirements:
         self.la_distance_water = 0.0
 
         self.attend_n = self.attend_num(self.pass_num)
-        self.payload_wt = 2600.0        # kg
+        self.payload_wt = 2200        # kg
         self.crew_wt = 300.0            # kg
         self.fuel_res_rang = 100        # km
         self.des_rang_payload = 1000    # kg

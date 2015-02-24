@@ -2,12 +2,13 @@
 
 # Form implementation generated from reading ui file 'Window3.ui'
 #
-# Created: Mon Feb 23 05:39:59 2015
+# Created: Tue Feb 24 08:34:42 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+import pyqtgraph as pg
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -417,9 +418,11 @@ class Ui_MainWindow(object):
         self.rang_seg_m_comb.setObjectName(_fromUtf8("rang_seg_m_comb"))
         self.rang_seg_m_comb.addItem(_fromUtf8(""))
         self.rang_seg_m_comb.addItem(_fromUtf8(""))
+        self.rang_seg_m_comb.addItem(_fromUtf8(""))
         self.segment_info_grid1.addWidget(self.rang_seg_m_comb, 1, 2, 1, 1)
         self.ht_seg_m_comb = QtGui.QComboBox(self.seg_inf_gb)
         self.ht_seg_m_comb.setObjectName(_fromUtf8("ht_seg_m_comb"))
+        self.ht_seg_m_comb.addItem(_fromUtf8(""))
         self.ht_seg_m_comb.addItem(_fromUtf8(""))
         self.ht_seg_m_comb.addItem(_fromUtf8(""))
         self.segment_info_grid1.addWidget(self.ht_seg_m_comb, 2, 2, 1, 1)
@@ -572,6 +575,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout_7.addWidget(self.groupBox)
         self.groupBox_2 = QtGui.QGroupBox(self.design_tab)
         self.groupBox_2.setObjectName(_fromUtf8("groupBox_2"))
+        self.verticalLayout_13 = QtGui.QVBoxLayout(self.groupBox_2)
+        self.verticalLayout_13.setObjectName(_fromUtf8("verticalLayout_13"))
+        self.graphs_vlayout = QtGui.QVBoxLayout()
+        self.graphs_vlayout.setObjectName(_fromUtf8("graphs_vlayout"))
+
+
+        self.verticalLayout_13.addLayout(self.graphs_vlayout)
         self.horizontalLayout_7.addWidget(self.groupBox_2)
         self.tabWidget.addTab(self.design_tab, _fromUtf8(""))
         self.historic_tab = QtGui.QWidget()
@@ -589,6 +599,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(3)
+        QtCore.QObject.connect(self.set_req_push, QtCore.SIGNAL(_fromUtf8("clicked()")), self.tabWidget.raise_)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -679,9 +690,11 @@ class Ui_MainWindow(object):
         self.typ_seg_comb.setItemText(5, _translate("MainWindow", "Landing", None))
         self.time_seg_lab.setText(_translate("MainWindow", "Time duration        ", None))
         self.rang_seg_m_comb.setItemText(0, _translate("MainWindow", "m", None))
-        self.rang_seg_m_comb.setItemText(1, _translate("MainWindow", "ft", None))
+        self.rang_seg_m_comb.setItemText(1, _translate("MainWindow", "km", None))
+        self.rang_seg_m_comb.setItemText(2, _translate("MainWindow", "ft", None))
         self.ht_seg_m_comb.setItemText(0, _translate("MainWindow", "m", None))
-        self.ht_seg_m_comb.setItemText(1, _translate("MainWindow", "ft", None))
+        self.ht_seg_m_comb.setItemText(1, _translate("MainWindow", "km", None))
+        self.ht_seg_m_comb.setItemText(2, _translate("MainWindow", "ft", None))
         self.time_seg_hr_comb.setItemText(0, _translate("MainWindow", "hr", None))
         self.time_seg_hr_comb.setItemText(1, _translate("MainWindow", "min", None))
         self.add_seg_push.setText(_translate("MainWindow", "Add Segment", None))

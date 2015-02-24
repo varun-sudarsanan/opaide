@@ -47,13 +47,6 @@ class MyWindow(QtGui.QMainWindow):
 
         self.mission1 = mission.MissionDef()
 
-        # for i in range(self.mission1.num_segments):
-        #     self.mission1.segments[i].ref=i
-        #     if self.mission1.segments[i].type==3:
-        #        self.mission1.segments[i].range=self.req1.design_range
-        #     elif self.mission1.segments[i].type==4:
-        #         self.mission1.segments[i].time=self.req1.loiter_time
-
     def update_objects(self):
         self.req1.update_req(self.aircraft1)
         self.aircraft1.update_config()
@@ -91,7 +84,8 @@ class MyWindow(QtGui.QMainWindow):
         self.mw.fuel_res_inp.setText(QString.number(self.req1.fuel_res_rang))
         self.mw.pass_inp.setText(QString.number(self.req1.pass_num))
         self.mw.cargo_inp.setText(QString.number(self.req1.cargo_wt))
-        self.mw.pay_wt_inplab.setText(QString.number(analysis.calc_payload(self.req1)))
+        analysis.calc_payload(self.req1)
+        self.mw.pay_wt_inplab.setText(QString.number(self.req1.payload_wt))
         self.mw.atm_alt_lab.setText("Atmospheric Compliance at "+QString.number(self.req1.max_run_alt)+" m")
 
         # Mission Definition Tab
@@ -185,8 +179,11 @@ class MyWindow(QtGui.QMainWindow):
     def mission_profile(self):
         self.mw.time_seg_inp.setDisabled(True)
         self.profile = self.mw.mission_graphics
-        w = self.profile.width()
-        h = self.profile.height()
+        self.scene = QtGui.QGraphicsScene()
+
+        w = 200
+        h = 60
+
         self.x1=0
         self.y1=0
         self.x2=0
@@ -195,8 +192,10 @@ class MyWindow(QtGui.QMainWindow):
         self.vert_pos = h*2
         self.current_horiz = -w/2
         self.current_vert = (h/2 - self.vert_pos)
-        self.scene = QtGui.QGraphicsScene()
+
         self.lines = []
+        self.loiter_count = 0
+        self.elipses = []
     # Push Buttons
     @pyqtSlot()
     def add_seg_push(self):
@@ -207,6 +206,7 @@ class MyWindow(QtGui.QMainWindow):
             self.mission1.segments.append(mission.MissionPhase())
             self.mission1.segments_num += 1
         self.miss_segments()
+        self.add_seg_clicked = 1
 
     @pyqtSlot()
     def rem_seg_push(self):
@@ -220,14 +220,16 @@ class MyWindow(QtGui.QMainWindow):
 
     @pyqtSlot()
     def ana_miss_push(self):
+        if (self.add_seg_clicked):
+            self.mission1.segments_num -= 1
         self.update_objects()
+        print "Before Analysis", self.req1.payload_wt
         analysis.class1_estimation(self.req1,self.aircraft1,self.mission1)
 
         print "After Analysis", self.aircraft1.gross_weight
-
+        self.add_seg_clicked = 0
     # Graphics View
     def delete_segment(self):
-        self.lines[self.counter].setLine(0,0,0,0)
         phase = self.mission1.segments[self.counter].type
         if phase == "Takeoff":
             self.current_horiz = self.current_horiz - self.horiz_pos/2
@@ -239,6 +241,8 @@ class MyWindow(QtGui.QMainWindow):
         elif phase == "Loiter":
             self.current_horiz = self.current_horiz - self.horiz_pos/4
             self.current_vert = self.current_vert - self.vert_pos/2
+            self.loiter_count -= 1
+            self.scene.removeItem(self.elipses[self.loiter_count])
         elif phase == "Descent":
             self.current_horiz = self.current_horiz - self.horiz_pos/4
             self.current_vert = self.current_vert - self.vert_pos/2
@@ -255,8 +259,6 @@ class MyWindow(QtGui.QMainWindow):
             self.x2 = self.current_horiz + self.horiz_pos/2
             self.y1 = self.current_vert
             self.y2 = self.current_vert
-            # print self.x1
-            # print
         elif phase == "Climb":
             self.x1 = self.current_horiz
             self.x2 = self.current_horiz + self.horiz_pos/2
@@ -268,10 +270,14 @@ class MyWindow(QtGui.QMainWindow):
             self.y1 = self.current_vert
             self.y2 = self.current_vert
         elif phase == "Loiter":
+            self.elipses.append(QtGui.QGraphicsEllipseItem())
             self.x1 = self.current_horiz
             self.x2 = self.current_horiz + self.horiz_pos/4
             self.y1 = self.current_vert
             self.y2 = self.current_vert + self.vert_pos/2
+            self.elipses[self.loiter_count].setRect((self.x1+self.x2+25)/2,(self.y1+self.y2+10)/2, (self.y1-self.y2)/2,(self.x1-self.x2)/2)
+            self.scene.addItem(self.elipses[self.loiter_count])
+            self.loiter_count += 1
         elif phase == "Descent":
             self.x1 = self.current_horiz
             self.x2 = self.current_horiz + self.horiz_pos/4
@@ -536,10 +542,9 @@ class MyWindow(QtGui.QMainWindow):
     def pass_inp(self, num):
         print num
         if self.isdigit(num):
-            print "isdigit"
             self.req1.pass_num = int(num)
-            se = analysis.calc_payload(self.req1)
-            self.mw.pay_wt_inplab.setText(QString.number(se))
+            analysis.calc_payload(self.req1)
+            self.mw.pay_wt_inplab.setText(QString.number(self.req1.payload_wt))
         elif num == "":
             pass
         else:
@@ -556,8 +561,8 @@ class MyWindow(QtGui.QMainWindow):
                 self.req1.cargo_wt = float(wt)
             else:
                 self.req1.cargo_wt = data.Conversion.LB_2_KG*float(wt)
-            se = analysis.calc_payload(self.req1)
-            self.mw.pay_wt_inplab.setText(QString.number(se))
+            analysis.calc_payload(self.req1)
+            self.mw.pay_wt_inplab.setText(QString.number(self.req1.payload_wt))
          elif wt == "":
             pass
          else:
@@ -593,8 +598,10 @@ class MyWindow(QtGui.QMainWindow):
         if self.isfloat(dist):
             if self.mw.rang_seg_m_comb.currentText() == "m":
                 self.mission1.segments[self.counter].range = float(dist)
-            else:
+            elif self.mw.rang_seg_m_comb.currentText() == "ft":
                 self.mission1.segments[self.counter].range = float(dist)/data.Conversion.M_2_FT
+            else:
+                self.mission1.segments[self.counter].range = float(dist)*data.Conversion.KM_2_M
         elif dist == "":
             pass
         else:
@@ -609,8 +616,10 @@ class MyWindow(QtGui.QMainWindow):
         if self.isfloat(ht):
             if self.mw.ht_seg_m_comb.currentText() == "m":
                 self.mission1.segments[self.counter].height = float(ht)
-            else:
+            elif self.mw.ht_seg_m_comb.currentText() == "ft":
                 self.mission1.segments[self.counter].height = float(ht)/data.Conversion.M_2_FT
+            else:
+                self.mission1.segments[self.counter].height = float(ht)*data.Conversion.KM_2_M
         elif ht == "":
             pass
         else:
@@ -802,6 +811,9 @@ class MyWindow(QtGui.QMainWindow):
         if dist == "ft":
             g = self.mission1.segments[self.counter].range*data.Conversion.M_2_FT
             self.mw.rang_seg_inp.setText(QString.number(g))
+        elif dist == "km":
+            g = self.mission1.segments[self.counter].range/data.Conversion.KM_2_M
+            self.mw.rang_seg_inp.setText(QString.number(g))
         else:
             self.mw.rang_seg_inp.setText(QString.number(self.mission1.segments[self.counter].range))
 
@@ -810,8 +822,11 @@ class MyWindow(QtGui.QMainWindow):
         if ht == "ft":
             g = self.mission1.segments[self.counter].height*data.Conversion.M_2_FT
             self.mw.ht_seg_inp.setText(QString.number(g))
-        else:
+        elif ht == "m":
             self.mw.ht_seg_inp.setText(QString.number(self.mission1.segments[self.counter].height))
+        else:
+            g = self.mission1.segments[self.counter].height/data.Conversion.KM_2_M
+            self.mw.ht_seg_inp.setText(QString.number(g))
 
     @pyqtSlot()
     def time_seg_hr_comb(self, t):
