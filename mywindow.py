@@ -29,6 +29,8 @@ class MyWindow(QtGui.QMainWindow):
         self.mw = Window3.Ui_MainWindow()
         super(MyWindow, self).__init__()
         self.mw.setupUi(self)
+        self.mw.tabWidget.setCurrentIndex(0)
+
         self.update_gui()
 
         self.update_objects()
@@ -41,6 +43,8 @@ class MyWindow(QtGui.QMainWindow):
     def update_gui(self):
         self.requirements()
         self.mission()
+        self.design_space()
+
     def create_objects(self):
         self.req1 = req.AircraftRequirements()
         self.aircraft1 = config.Aircraft()
@@ -66,6 +70,37 @@ class MyWindow(QtGui.QMainWindow):
         self.connect(self.mw.add_seg_push, QtCore.SIGNAL(_fromUtf8("clicked()")), self.add_seg_push)
         self.connect(self.mw.rem_seg_push, QtCore.SIGNAL(_fromUtf8("clicked()")), self.rem_seg_push)
 
+    def design_space(self):
+        p = self.req1.pass_num
+        c = self.req1.cargo_wt
+        p_min = p-5
+        p_max = p+5
+        c_min = c-100
+        c_max = c+100
+
+
+        self.mw.max_pass_lab.setText(QString.number(p_max))
+        self.mw.min_pass_lab.setText(QString.number(p_min))
+
+        self.mw.pass_slider.setMinimum(p_min)
+        self.mw.pass_slider.setMaximum(p_max)
+        self.mw.pass_slider.setValue(p)
+
+        self.mw.current_pass_num.setText(QString.number(self.mw.pass_slider.value()))
+
+        self.mw.max_cargo_lab.setText(QString.number(c_max))
+        self.mw.min_cargo_lab.setText(QString.number(c_min))
+
+        self.mw.cargo_slider.setMinimum(c_min)
+        self.mw.cargo_slider.setMaximum(c_max)
+        self.mw.cargo_slider.setSingleStep(20)
+        self.mw.cargo_slider.setValue(c)
+
+        self.mw.current_cargo_wt.setText(QString.number(self.mw.cargo_slider.value()))
+
+        self.connect(self.mw.cargo_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.cargo_w_gross)
+        self.connect(self.mw.pass_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.pass_w_gross)
+
     def req_set_defaults(self):
 
         # Requirements Tab
@@ -88,7 +123,7 @@ class MyWindow(QtGui.QMainWindow):
         analysis.calc_payload(self.req1)
         self.mw.pay_wt_inplab.setText(QString.number(self.req1.payload_wt))
         self.mw.atm_alt_lab.setText("Atmospheric Compliance at "+QString.number(self.req1.max_run_alt)+" m")
-
+        self.mw.engine_inp.setText(QString.number(self.aircraft1.prop.engines_num))
         # Mission Definition Tab
 
         self.mw.miss_nam_inp.setText(self.mission1.name)
@@ -154,6 +189,10 @@ class MyWindow(QtGui.QMainWindow):
     def miss_segments(self):
         i = self.counter % 6
         self.mw.typ_seg_comb.setCurrentIndex(i)
+        self.mw.rang_seg_m_comb.setCurrentIndex(0)
+        self.mw.ht_seg_m_comb.setCurrentIndex(0)
+        self.mw.time_seg_hr_comb.setCurrentIndex(0)
+
         self.mw.rang_seg_inp.setText(QString.number(self.mission1.segments[self.counter].range))
         self.mw.ht_seg_inp.setText(QString.number(self.mission1.segments[self.counter].height))
         self.mw.time_seg_inp.setText(QString.number(self.mission1.segments[self.counter].time))
@@ -222,11 +261,14 @@ class MyWindow(QtGui.QMainWindow):
         if (self.add_seg_clicked):
             self.mission1.segments_num -= 1
         self.update_objects()
-        print "Before Analysis", self.req1.payload_wt
         analysis.class1_estimation(self.req1,self.aircraft1,self.mission1)
-
-        print "After Analysis", self.aircraft1.gross_weight
+        self.mw.ds_gross_out.setText(QString.number(self.aircraft1.gross_weight))
         self.add_seg_clicked = 0
+
+        # Setting Design Space
+        self.design_space()
+        self.mw.tabWidget.setCurrentIndex(3)
+
     # Graphics View
     def delete_segment(self):
         phase = self.mission1.segments[self.counter].type
@@ -656,6 +698,9 @@ class MyWindow(QtGui.QMainWindow):
             self.constraint_plots.append(self.mw.pw.plot())
             self.constraint_plots[i].setPen((200,200,100))
             self.constraint_plots[i].setData(y = self.req1.constraints[i].t_by_w, x = self.req1.constraints[i].w_by_s)
+        self.design_space()
+        self.mw.tabWidget.setCurrentIndex(1)
+
 
     @pyqtSlot()
     def des_rang_km_comb(self, dist):
@@ -814,7 +859,39 @@ class MyWindow(QtGui.QMainWindow):
             g = self.mission1.segments[self.counter].time*data.Conversion.HR_2_MIN
             self.mw.time_seg_inp.setText(QString.number(g))
 
+    # Gross Weight Visualisation Slots
+
+    @pyqtSlot()
+    def pass_w_gross(self,pos):
+        init_pass = self.req1.pass_num
+        init_gross = self.aircraft1.gross_weight
+        self.req1.pass_num = pos
+        analysis.class1_estimation(self.req1, self.aircraft1, self.mission1)
+
+        self.mw.ds_gross_out.setText(QString.number(self.aircraft1.gross_weight))
+        self.mw.current_pass_num.setText(QString.number(pos))
+
+        #reset values
+        self.req1.pass_num = init_pass
+        self.aircraft1.gross_weight = init_gross
+
+    @pyqtSlot()
+    def cargo_w_gross(self,pos):
+        init_cargo = self.req1.cargo_wt
+        init_gross = self.aircraft1.gross_weight
+        self.req1.cargo_wt = pos
+        analysis.class1_estimation(self.req1, self.aircraft1, self.mission1)
+
+        self.mw.ds_gross_out.setText(QString.number(self.aircraft1.gross_weight))
+        self.mw.current_cargo_wt.setText(QString.number(pos))
+
+        #reset values
+        self.req1.cargo_wt = init_cargo
+        self.aircraft1.gross_weight = init_gross
+
+
     # Assisting Functions
+
 
     def isfloat(self,value):
         try:

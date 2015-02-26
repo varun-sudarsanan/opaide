@@ -4,12 +4,10 @@ import math
 
 
 def class1_estimation(r, a, m):
-    # r.payload_wt = (data.Historic_param.PASS_WEIGHT+data.Historic_param.PASS_BAG_WEIGHT)*a.pass_n + r.cargo_wt  # kg  --> For Tourism ops
     calc_payload(r)
     r.crew_wt = data.Historic_param.PILOT_WEIGHT*r.pilots_n + data.Historic_param.CABIN_CREW_WEIGHT*r.attend_n + data.Historic_param.CREW_BAG_WEIGHT*(r.pilots_n+r.attend_n)  # kg --> For Tourism ops
 
     wt = 4*r.payload_wt
-    print "Initial Weight Estimate", wt
 
     f = 1
     for i in range(m.segments_num):
@@ -25,13 +23,10 @@ def class1_estimation(r, a, m):
             m.segments[i].wf = data.Historic_param.DESCENT_WF
         else:
             m.segments[i].wf = data.Historic_param.LANDING_WF
-        print m.segments[i].type
-        print "Wf : ",  m.segments[i].wf
         f = f*m.segments[i].wf
     temp = 0
-    print "Weight fraction f: ", f
+
     m.fuel_fraction = (1+a.rff)*(1-f)
-    print "Fuel fraction", m.fuel_fraction
 
     ew_f = data.Historic_param.WEIGHT_A*math.pow(wt,(data.Historic_param.WEIGHT_C*data.Historic_param.WEIGHT_K))
     wt = (r.payload_wt+r.crew_wt)/(1-ew_f-m.fuel_fraction)
@@ -42,7 +37,6 @@ def class1_estimation(r, a, m):
         ew_f = data.Historic_param.WEIGHT_A*math.pow(wt,(data.Historic_param.WEIGHT_C*data.Historic_param.WEIGHT_K))
         wt = (r.payload_wt+r.crew_wt)/(1-ew_f-m.fuel_fraction)
         count += 1
-    print "Gross Weight", wt
     a.gross_weight = wt
 
 def constraint(r, a, m):
