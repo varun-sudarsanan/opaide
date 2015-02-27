@@ -671,6 +671,8 @@ class Ui_MainWindow(object):
 
         self.pw = pg.PlotWidget(name='Constraint Analysis')  ## giving the plots names allows us to link their axes together
         self.graphs_hlayout.addWidget(self.pw)
+        self.pw.setLabel('left','Thrust Loading',units = 'N/kg')
+        self.pw.setLabel('bottom','Wing Loading',units = 'kg/m3')
 
 
 

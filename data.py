@@ -5,7 +5,7 @@ import math
 class Atmospheric_param:
     # Constants
     RHO_SL = 1.2252139  # kg/m3
-    P_ISA = 101325      # Pa
+    P_ISA = 101.325     # KPa
     T_ISA = 288.15      # K
     GAMMA_AIR = 1.401   # ratio
     SIGMA = 1           # ratio

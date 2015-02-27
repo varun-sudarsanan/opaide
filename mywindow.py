@@ -78,7 +78,6 @@ class MyWindow(QtGui.QMainWindow):
         c_min = c-100
         c_max = c+100
 
-
         self.mw.max_pass_lab.setText(QString.number(p_max))
         self.mw.min_pass_lab.setText(QString.number(p_min))
 
@@ -100,6 +99,8 @@ class MyWindow(QtGui.QMainWindow):
 
         self.connect(self.mw.cargo_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.cargo_w_gross)
         self.connect(self.mw.pass_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.pass_w_gross)
+
+        self.graph_controls()
 
     def req_set_defaults(self):
 
@@ -234,6 +235,129 @@ class MyWindow(QtGui.QMainWindow):
         self.lines = []
         self.loiter_count = 0
         self.elipses = []
+
+    def graph_controls(self):
+        # Constants
+
+        self.setup_graph_controls()
+
+        self.connect(self.mw.sscg_check,QtCore.SIGNAL(_fromUtf8("stateChanged(int)")),self.sscg_check)
+        self.connect(self.mw.missedapp_check,QtCore.SIGNAL(_fromUtf8("stateChanged(int)")),self.missedapp_check)
+        self.connect(self.mw.landing_check,QtCore.SIGNAL(_fromUtf8("stateChanged(int)")),self.landing_check)
+        self.connect(self.mw.takeoff_check,QtCore.SIGNAL(_fromUtf8("stateChanged(int)")),self.takeoff_check)
+        self.connect(self.mw.roc_check,QtCore.SIGNAL(_fromUtf8("stateChanged(int)")),self.roc_check)
+
+
+        self.connect(self.mw.roc_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.roc_slider)
+
+    def setup_graph_controls(self):
+        self.mw.sscg_check.setCheckState(2)
+        self.mw.missedapp_check.setCheckState(2)
+        self.mw.landing_check.setCheckState(2)
+        self.mw.roc_check.setCheckState(2)
+        self.mw.stall_check.setCheckState(2)
+        self.mw.takeoff_check.setCheckState(2)
+
+        # Roc slider
+        roc_curr = self.req1.roc
+        roc_min = roc_curr - 4
+        roc_max = roc_curr + 4
+
+        self.mw.roc_slider.setMinimum(roc_min)
+        self.mw.roc_slider.setMaximum(roc_max)
+        self.mw.roc_slider.setValue(roc_curr)
+        self.mw.roc_max_lab.setText(QString.number(roc_max))
+        self.mw.roc_min_lab.setText(QString.number(roc_min))
+        self.mw.roc_current_lab.setText(QString.number(roc_curr))
+
+
+    #Graph Sliders
+    def roc_slider(self,val):
+        actual = self.req1.roc
+        self.req1.roc = val
+        self.mw.roc_current_lab.setText(QString.number(val))
+        analysis.constraint(self.req1,self.aircraft1,self.mission1)
+        self.plot_constraints()
+        self.req1.roc = actual
+    # Checkboxes
+    @pyqtSlot()
+    def sscg_check(self,val):
+        if val == 2:
+            for i in range(len(self.req1.constraints)):
+                if self.req1.constraints[i].name == "sscg":
+                    break
+            self.constraint_plots[i].setPen(0,255,0)
+        elif val == 0:
+            for i in range(len(self.req1.constraints)):
+                if self.req1.constraints[i].name == "sscg":
+                    break
+            self.constraint_plots[i].setPen(0,0,0)
+
+    @pyqtSlot()
+    def missedapp_check(self,val):
+        if val == 2:
+            for i in range(len(self.req1.constraints)):
+                if self.req1.constraints[i].name == "mag":
+                    break
+            self.constraint_plots[i].setPen(255,0,0)
+        elif val == 0:
+            for i in range(len(self.req1.constraints)):
+                if self.req1.constraints[i].name == "mag":
+                    break
+            self.constraint_plots[i].setPen(0,0,0)
+
+    @pyqtSlot()
+    def landing_check(self,val):
+        if val == 2:
+            for i in range(len(self.req1.constraints)):
+                if self.req1.constraints[i].name == "lan":
+                    break
+            self.constraint_plots[i].setPen(0,255,0)
+        elif val == 0:
+            for i in range(len(self.req1.constraints)):
+                if self.req1.constraints[i].name == "lan":
+                    break
+            self.constraint_plots[i].setPen(0,0,0)
+
+    @pyqtSlot()
+    def takeoff_check(self,val):
+        if val == 2:
+            for i in range(len(self.req1.constraints)):
+                if self.req1.constraints[i].name == "tak":
+                    break
+            self.constraint_plots[i].setPen(255,0,0)
+        elif val == 0:
+            for i in range(len(self.req1.constraints)):
+                if self.req1.constraints[i].name == "tak":
+                    break
+            self.constraint_plots[i].setPen(0,0,0)
+    @pyqtSlot()
+    def roc_check(self,val):
+        if val == 2:
+            for i in range(len(self.req1.constraints)):
+                if self.req1.constraints[i].name == "roc":
+                    break
+            self.constraint_plots[i].setPen(0,255,255)
+        elif val == 0:
+            for i in range(len(self.req1.constraints)):
+                if self.req1.constraints[i].name == "roc":
+                    break
+            self.constraint_plots[i].setPen(0,0,0)
+
+    @pyqtSlot()
+    def stall_check(self,val):
+        if val == 2:
+            for i in range(len(self.req1.constraints)):
+                if self.req1.constraints[i].name == "mag":
+                    break
+            self.constraint_plots[i].setPen(255,0,0)
+        elif val == 0:
+            for i in range(len(self.req1.constraints)):
+                if self.req1.constraints[i].name == "mag":
+                    break
+            self.constraint_plots[i].setPen(0,0,0)
+
+
     # Push Buttons
     @pyqtSlot()
     def add_seg_push(self):
@@ -335,6 +459,21 @@ class MyWindow(QtGui.QMainWindow):
 
         self.scene.addItem(self.lines[self.counter])
         self.profile.setScene(self.scene)
+
+    def plot_constraints(self):
+        for i in range(len(self.req1.constraints)):
+            self.constraint_plots.append(self.mw.pw.plot())
+            if self.req1.constraints[i].name == "togr":
+                self.constraint_plots[i].setPen((255,222,20))
+            elif self.req1.constraints[i].name == "roc":
+                self.constraint_plots[i].setPen((255,0,0))
+            elif self.req1.constraints[i].name == "sscg":
+                self.constraint_plots[i].setPen((0,0,255))
+            elif self.req1.constraints[i].name == "mag":
+                self.constraint_plots[i].setPen((255,0,0))
+            elif self.req1.constraints[i].name == "lfl":
+                self.constraint_plots[i].setPen((255,255,255))
+            self.constraint_plots[i].setData(y = self.req1.constraints[i].t_by_w, x = self.req1.constraints[i].w_by_s)
 
     # Data Input Slots
 
@@ -692,15 +831,11 @@ class MyWindow(QtGui.QMainWindow):
         self.req1.regulation = self.mw.reg_comb.currentText()
         print "Before"
         analysis.constraint(self.req1,self.aircraft1,self.mission1)
-        print "After"
         self.constraint_plots = []
-        for i in range(len(self.req1.constraints)):
-            self.constraint_plots.append(self.mw.pw.plot())
-            self.constraint_plots[i].setPen((200,200,100))
-            self.constraint_plots[i].setData(y = self.req1.constraints[i].t_by_w, x = self.req1.constraints[i].w_by_s)
+        self.plot_constraints()
+
         self.design_space()
         self.mw.tabWidget.setCurrentIndex(1)
-
 
     @pyqtSlot()
     def des_rang_km_comb(self, dist):

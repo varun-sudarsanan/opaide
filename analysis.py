@@ -44,52 +44,86 @@ def constraint(r, a, m):
     # Take-off ground roll
     tak = PlotConst()
     tak.name = "togr"
+
     # SSCG
     sscg = PlotConst()
     sscg.name = "sscg"
+    thrust_load = (eng_n/(eng_n-1))*(1/a.l_by_d_cruise+data.Regulations.SSCG(r.regulation,eng_n))
 
-    for j in range(sscg.num_data):
-        sscg.t_by_w[j] = (eng_n/(eng_n-1))*(1/a.l_by_d_cruise+data.Regulations.SSCG(r.regulation,eng_n))
+    sscg.t_by_w[0] = thrust_load
+    j=1
+    while sscg.w_by_s[j-1] < sscg.wbys_end:
+        sscg.w_by_s.append(sscg.w_by_s[0]+10*j)
+        sscg.t_by_w.append(thrust_load)
+        j += 1
+    sscg.num_data = len(sscg.t_by_w)
+
 
     # MAG;
     mag = PlotConst()
     mag.name = "mag"
-    for j in range(mag.num_data):
-        mag.t_by_w[j] = (eng_n/(eng_n-1))*(1/a.l_by_d_cruise+data.Regulations.MAG(r.regulation,eng_n))
+
+    thrust_load = (eng_n/(eng_n-1))*(1/a.l_by_d_cruise+data.Regulations.MAG(r.regulation,eng_n))
+
+    mag.t_by_w[0] = thrust_load
+    j=1
+    while mag.w_by_s[j-1] < mag.wbys_end:
+        mag.w_by_s.append(mag.w_by_s[0]+10*j)
+        mag.t_by_w.append(thrust_load)
+        j += 1
+    mag.num_data = len(mag.t_by_w)
+
 
     # Rate of Climb
     roc = PlotConst()
 
     roc.name = "roc"
     g = r.roc/a.v_climb
+    c=0
+    j=0
+    i=0
+    roc.t_by_w[0] = 0.4
 
-
-    for j in range(roc.num_data):
+    while roc.t_by_w[i] < roc.tbyw_end:
+        if j==0:
+            roc.t_by_w[0] = 0.4 + c
+        else:
+            roc.t_by_w.append(roc.t_by_w[0]+c)
+            i += 1
         q = 0.5*data.Atmospheric_param.rho(m.segments[0].height)*math.pow(a.v_climb,2)
         k = math.pi*a.wing.a_r*a.wing.e
         exp = math.pow((roc.t_by_w[j] - g), 2) - 4*a.cd0/k
+
         if exp >= 0:
             term = roc.t_by_w[j] - g
-            if term+math.sqrt(exp) >= 0 and term-math.sqrt(exp) >= 0:
-                roc.w_by_s[j] = min(term+math.sqrt(exp),term-math.sqrt(exp))*q*k/2
+            if term-math.sqrt(exp) >= 0:
+                if j == 0:
+                    roc.w_by_s[j] = min(term+math.sqrt(exp),term-math.sqrt(exp))*q*k/2
+                else:
+                    roc.w_by_s.append(min(term+math.sqrt(exp),term-math.sqrt(exp))*q*k/2)
+                j += 1
             elif term+math.sqrt(exp) >= 0:
-                roc.w_by_s[j] = (term+math.sqrt(exp))*q*k/2
-            else:
-                roc.w_by_s[j] = 0
-                roc.t_by_w[j] = 0
-        else:
-                roc.w_by_s[j] = 0
-                roc.t_by_w[j] = 0
+                if j == 0:
+                    roc.w_by_s[j] = (term+math.sqrt(exp))*q*k/2
+                else:
+                    roc.w_by_s.append((term+math.sqrt(exp))*q*k/2)
+                j += 1
 
+        c += 0.005
+
+    roc.num_data = len(roc.w_by_s)
     # Landing Constraint
     lan = PlotConst()
-    lan.name = "lfl"
+
     s_land_ft = r.la_distance_land*data.Conversion.M_2_FT/data.Historic_param.LAND_FRACT
-
-    for j in range(lan.num_data):
-        t = a.cl_max*data.Atmospheric_param.rho(m.segments[0].height)*(s_land_ft - r.app_dist)/80
-        lan.w_by_s[j] = t*data.Conversion.LBFT2_2_KGM2
-
+    t = data.Conversion.LBFT2_2_KGM2*a.cl_max*data.Atmospheric_param.rho(m.segments[0].height)*(s_land_ft - r.app_dist)/80
+    lan.w_by_s[0] = t
+    j=1
+    while mag.w_by_s[j-1] < mag.wbys_end:
+        lan.w_by_s.append(t)
+        lan.t_by_w.append(lan.t_by_w[0]+0.05*j)
+        j += 1
+    lan.num_data = len(lan.w_by_s)
 
     r.constraints = [tak,sscg,mag,roc,lan]
 
@@ -97,21 +131,22 @@ class PlotConst:
     tbyw_start = 0.1
     tbyw_end = 1.5
     wbys_start = 75
-    wbys_end = 800
+    wbys_end = 500
 
     def __init__(self):
         self.name = ""
         self.t_by_w = [PlotConst.tbyw_start]
-        i = 0
-        while self.t_by_w[i] <= PlotConst.tbyw_end:
-            temp = self.t_by_w[i]+0.05
-            self.t_by_w.append(temp)
-            i += 1
-        self.num_data = len(self.t_by_w)
         self.w_by_s = [PlotConst.wbys_start]
-        for j in range(self.num_data):
-            if j != 0:
-                self.w_by_s.append(PlotConst.wbys_start + 10*j)
+        self.num_data = 1
+        # i = 0
+        # while self.t_by_w[i] <= PlotConst.tbyw_end:
+        #     temp = self.t_by_w[i]+0.05
+        #     self.t_by_w.append(temp)
+        #     i += 1
+        # self.num_data = len(self.t_by_w)
+        # for j in range(self.num_data):
+        #     if j != 0:
+        #         self.w_by_s.append(PlotConst.wbys_start + 10*j)
 
 def calc_payload(r):
     r.payload_wt = (data.Historic_param.PASS_WEIGHT+data.Historic_param.PASS_BAG_WEIGHT)*r.pass_num + r.cargo_wt
