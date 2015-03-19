@@ -270,6 +270,41 @@ class MyWindow(QtGui.QMainWindow):
         self.mw.roc_min_lab.setText(QString.number(roc_min))
         self.mw.roc_current_lab.setText(QString.number(roc_curr))
 
+        #Landing Slider
+        land_curr = self.req1.la_distance_land
+        land_min = land_curr - 200
+        land_max = land_curr + 200
+
+        self.mw.landing_slider.setMinimum(land_min)
+        self.mw.landing_slider.setMaximum(land_max)
+        self.mw.landing_slider.setValue(land_curr)
+        self.mw.landing_max_lab.setText(QString.number(land_max))
+        self.mw.landing_min_lab.setText(QString.number(land_min))
+        self.mw.landing_current_lab.setText(QString.number(land_curr))
+
+        #Takeoff Slider
+        takeoff_curr = self.req1.to_distance_land
+        takeoff_min = takeoff_curr - 200
+        takeoff_max = takeoff_curr + 200
+
+        self.mw.takeoff_slider.setMinimum(takeoff_min)
+        self.mw.takeoff_slider.setMaximum(takeoff_max)
+        self.mw.takeoff_slider.setValue(takeoff_curr)
+        self.mw.takeoff_max_lab.setText(QString.number(takeoff_max))
+        self.mw.takeoff_min_lab.setText(QString.number(takeoff_min))
+        self.mw.takeoff_current_lab.setText(QString.number(takeoff_curr))
+
+        #Stall Velocity
+        stall_curr = self.req1.la_distance_land
+        stall_min = stall_curr - 200
+        stall_max = stall_curr + 200
+
+        self.mw.stall_slider.setMinimum(stall_min)
+        self.mw.stall_slider.setMaximum(stall_max)
+        self.mw.stall_slider.setValue(stall_curr)
+        self.mw.stall_max_lab.setText(QString.number(stall_max))
+        self.mw.stall_min_lab.setText(QString.number(stall_min))
+        self.mw.stall_current_lab.setText(QString.number(stall_curr))
 
     #Graph Sliders
     def roc_slider(self,val):
@@ -279,6 +314,7 @@ class MyWindow(QtGui.QMainWindow):
         analysis.constraint(self.req1,self.aircraft1,self.mission1)
         self.plot_constraints()
         self.req1.roc = actual
+
     # Checkboxes
     @pyqtSlot()
     def sscg_check(self,val):

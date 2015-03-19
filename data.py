@@ -1,5 +1,4 @@
 __author__ = 'Varun S S'
-
 import math
 
 class Atmospheric_param:
@@ -8,7 +7,6 @@ class Atmospheric_param:
     P_ISA = 101.325     # KPa
     T_ISA = 288.15      # K
     GAMMA_AIR = 1.401   # ratio
-    SIGMA = 1           # ratio
 
     R = 8.31447     # J/mol.K
     g = 9.80665     # m/s2
@@ -41,6 +39,10 @@ class Atmospheric_param:
     @staticmethod
     def speed_sound(alt):
         return (math.sqrt(Atmospheric_param.GAMMA_AIR*Atmospheric_param.R*Atmospheric_param.temp(alt)))
+
+    @staticmethod
+    def sigma(alt):
+        return (Atmospheric_param.rho(alt)/Atmospheric_param.RHO_SL)
 
 class Historic_param:
     # Constants from historic data
@@ -127,6 +129,8 @@ class Regulations:
                 return 0.023
             else:
                 return 0.020
+
+
     @staticmethod
     def MAG(reg,n):
         if reg == "FAR 25" or reg == "FAR 23":
