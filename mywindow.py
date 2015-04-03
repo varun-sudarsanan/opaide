@@ -179,8 +179,10 @@ class MyWindow(QtGui.QMainWindow):
         self.connect(self.mw.run_alt_isa_t_sb, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.run_alt_isa_t_sb)
 
         # Combo Boxes
+
+
+        #Push buttons
         self.connect(self.mw.set_req_push,QtCore.SIGNAL(_fromUtf8("clicked()")),self.set_req_push)
-        #self.connect(self.mw.reg_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.reg_comb)
 
     def miss_set_defaults(self):
         self.counter = 0
@@ -865,6 +867,8 @@ class MyWindow(QtGui.QMainWindow):
     @pyqtSlot()
     def set_req_push(self):
         self.req1.regulation = self.mw.reg_comb.currentText()
+        self.req1.aircraft_type = self.mw.aircraft_type_comb.currentText()
+
         print "Before"
         analysis.constraint(self.req1,self.aircraft1,self.mission1)
         self.constraint_plots = []
