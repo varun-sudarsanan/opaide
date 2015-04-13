@@ -30,6 +30,7 @@ class Aircraft:
         self.l_by_d_loiter = data.Historic_param.L_BY_D_MAX
         self.cd0 = data.Historic_param.CD0
         self.cl_max = 2.97
+        self.cl_lo = 1.5
 
         self.pass_n = 0
 
@@ -38,16 +39,37 @@ class Aircraft:
         self.fuse = Aircraft.Fuselage()
         self.stab = Aircraft.Stabilizer(self.fuse, self.wing)
         self.prop = Aircraft.PowerPlant()
+    class Container:
+        def __init__(self):
+            self.type = "None"
+            self.width_bot = 0
+            self.width_top = 0
+            self.height = 0
 
     class Cabin:
         def __init__(self):
+            self.type = "Passenger"
+            self.class_num = 1
+            self.avg_seats_abr = [2,0,0]
+            self.aisle_num = [1,0,0]
+            self.seat_pitch = [1,0,0]
+            self.lav_num = [1,0,0]
+            self.galley_num = [1,0,0]
+            self.container = Aircraft.Container()
             self.length = 12.56
             self.seats = 24
-            self.aisle_num = 1
-            self.lavatory = 1
-            self.galley = 1
-            self.width = 2.11
-            self.height = 2.61
+            self.cargo_length = 0
+            self.cargo_width = 0
+            self.cargo_height = 0
+
+            self.floor_lowering = 0
+            self.floor_thickness = 0
+            self.inner_height = 2.61
+            self.inner_width = 2.11
+            self.outer_height = self.inner_height+data.Historic_param.Fuselage.FUSELAGE_THICKNESS
+            self.outer_width = self.inner_width+data.Historic_param.Fuselage.FUSELAGE_THICKNESS
+            self.inner_eq_dia = (self.inner_height+self.inner_width)/2
+            self.outer_eq_dia = (self.outer_height+self.outer_width)/2
 
     class Wing:
         """Class for defining the wing configuration"""
@@ -74,9 +96,19 @@ class Aircraft:
             self.cabin = Aircraft.Cabin()
             self.pilots = 2
             self.attendants = 1
-            self.nose_length = data.Historic_param.NOSE_LENGTH_2_DIA*(self.cabin.width+self.cabin.height)/2
-            self.tail_length = data.Historic_param.TAIL_LENGTH_2_DIA*(self.cabin.width+self.cabin.height)/2
-            self.length = self.cabin.length+self.nose_length+self.tail_length
+            self.thickness = data.Historic_param.Fuselage.FUSELAGE_THICKNESS
+            self.nose_length2dia = data.Historic_param.Fuselage.NOSE_LENGTH_2_DIA
+            self.nose_offset = data.Historic_param.Fuselage.NOSE_OFFSET
+            self.tail_length2dia = data.Historic_param.Fuselage.TAIL_LENGTH_2_DIA
+            self.tail_offset2dia = data.Historic_param.Fuselage.TAIL_OFFSET_2_DIA
+            self.length = 0
+            self.update_fuse_length()
+
+        def update_fuse_length(self):
+            self.nose_length = self.nose_length2dia*self.cabin.outer_eq_dia/2
+            self.tail_length = self.tail_length2dia*self.cabin.outer_eq_dia/2
+            self.tail_offset = self.tail_offset2dia*self.cabin.outer_eq_dia/2
+            self.length = self.cabin.length + self.nose_length - self.nose_offset + self.tail_length - self.tail_offset
 
     class Stabilizer:
         def __init__(self,fuse,wing):

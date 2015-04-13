@@ -41,9 +41,19 @@ def class1_estimation(r, a, m):
 
 def constraint(r, a, m):
     eng_n = a.prop.engines_num
+
     # Take-off ground roll
     tak = PlotConst()
     tak.name = "togr"
+    tak.w_by_s[0] = r.to_disance_land*data.sigma(r.max_run_alt)*a.cl_lo*tak.t_by_w[0]*data.Atmospheric_param.g*data.Atmospheric_param.RHO_SL
+    j=1
+    while tak.w_by_s[j-1] < tak.wbys_end:
+        tak.t_by_w.append(tak.t_by_w[0]+0.05*j)
+        t = r.to_disance_land*data.sigma(r.max_run_alt)*a.cl_lo*tak.t_by_w[0]*data.Atmospheric_param.g*data.Atmospheric_param.RHO_SL
+        tak.w_by_s.append(t)
+        j += 1
+    tak.num_data = len(tak.w_by_s)
+
 
     # SSCG
     sscg = PlotConst()
@@ -90,7 +100,7 @@ def constraint(r, a, m):
         else:
             roc.t_by_w.append(roc.t_by_w[0]+c)
             i += 1
-        q = 0.5*data.Atmospheric_param.rho(m.segments[0].height)*math.pow(a.v_climb,2)
+        q = 0.5*data.Atmospheric_param.rho(m.segments[0].height,r.roc_isa_t)*math.pow(a.v_climb,2)
         k = math.pi*a.wing.a_r*a.wing.e
         exp = math.pow((roc.t_by_w[j] - g), 2) - 4*a.cd0/k
 
@@ -116,16 +126,28 @@ def constraint(r, a, m):
     lan = PlotConst()
 
     s_land_ft = r.la_distance_land*data.Conversion.M_2_FT/data.Historic_param.LAND_FRACT
-    t = data.Conversion.LBFT2_2_KGM2*a.cl_max*data.Atmospheric_param.rho(m.segments[0].height)*(s_land_ft - r.app_dist)/80
+    t = data.Conversion.LBFT2_2_KGM2*a.cl_max*data.Atmospheric_param.rho(m.segments[0].height,r.run_msl_isa_t)*(s_land_ft - r.app_dist)/80
     lan.w_by_s[0] = t
     j=1
-    while mag.w_by_s[j-1] < mag.wbys_end:
+    while lan.w_by_s[j-1] < lan.wbys_end:
         lan.w_by_s.append(t)
         lan.t_by_w.append(lan.t_by_w[0]+0.05*j)
         j += 1
     lan.num_data = len(lan.w_by_s)
 
-    r.constraints = [tak,sscg,mag,roc,lan]
+    #Stall Velocity
+    stall = PlotConst()
+    t = 0.5*data.Atmospheric_param.rho(0,0)*math.pow(r.v_stall_max,2)*a.cl_max
+    stall.w_by_s[0] = t
+    j=1
+    while stall.w_by_s[j-1] < stall.w_by_s:
+        stall.w_by_s.append(t)
+        stall.t_by_w.append(stall.t_by_w[0]+0.05*j)
+        j += 1
+
+    #Turn Rate
+
+    r.constraints = [tak,sscg,mag,roc,lan,stall]
 
 class PlotConst:
     tbyw_start = 0.1
@@ -149,4 +171,4 @@ class PlotConst:
         #         self.w_by_s.append(PlotConst.wbys_start + 10*j)
 
 def calc_payload(r):
-    r.payload_wt = (data.Historic_param.PASS_WEIGHT+data.Historic_param.PASS_BAG_WEIGHT)*r.pass_num + r.cargo_wt
+    r.payload_wt = (data.Historic_param.Fuselage.PASS_WEIGHT+data.Historic_param.Fuselage.PASS_BAG_WEIGHT)*r.pass_num + r.cargo_wt

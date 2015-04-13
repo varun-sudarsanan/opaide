@@ -33,8 +33,9 @@ class Atmospheric_param:
         return (Atmospheric_param.P_ISA*math.pow((Atmospheric_param.temp(alt)/Atmospheric_param.T_ISA),(Atmospheric_param.g*Atmospheric_param.M_air/(Atmospheric_param.R*Atmospheric_param.TROP_LAPSE*1000))))
 
     @staticmethod
-    def rho(alt):
-        return (Atmospheric_param.pres(alt)*Atmospheric_param.M_air/(Atmospheric_param.R*Atmospheric_param.temp(alt)))
+    def rho(alt,temp):
+        t = Atmospheric_param.temp(alt)+temp
+        return (Atmospheric_param.pres(alt)*Atmospheric_param.M_air/(Atmospheric_param.R*t))
 
     @staticmethod
     def speed_sound(alt):
@@ -77,39 +78,95 @@ class Historic_param:
     # Safety Parameters
     LAND_FRACT = 1.67
 
-    # Fuselage Parameters
-    # ______________*_________________
+    class Fuselage:
+        # Fuselage Parameters
+        # ______________*_________________
 
-    NOSE_LENGTH_2_DIA = 2.5     # ratio
-    NOSE_OFFSET = 2.8           # m
-    TAIL_LENGTH_2_DIA = 2.4     # ratio
-    TAIL_OFFSET_2_DIA = 1.2     # ratio
+        NOSE_LENGTH_2_DIA = 2.5     # ratio
+        NOSE_OFFSET = 2.8           # m
+        TAIL_LENGTH_2_DIA = 2.4     # ratio
+        TAIL_OFFSET_2_DIA = 1.2     # ratio
 
-    FUSELAGE_THICKNESS = 0.091  # m
-    AISLE_WIDTH = 0.508         # m
-    AISLE_HEIGHT = 1.93         # m
-    SEAT_PITCH = 0.81           # m
+        FUSELAGE_THICKNESS = 0.091  # m
+        AISLE_WIDTH = 0.508         # m
+        AISLE_HEIGHT = 1.93         # m
+        SEAT_PITCH = 0.81           # m
 
-    # Seat Parameters
-    SEAT_WIDTH = 0.51           # m
-    SEAT_LENGTH = 0.64          # m
-    SEAT_HEIGHT = 1             # m
+        # Seat Parameters
+        SEAT_WIDTH = 0.51           # m
+        SEAT_LENGTH = 0.64          # m
+        SEAT_HEIGHT = 1             # m
 
-    # Lavatory Parameters
-    LAVATORY_LENGTH = 1         # m
-    LAVATORY_WIDTH = 1          # m
+        # Lavatory Parameters
+        LAVATORY_LENGTH = 1         # m
+        LAVATORY_WIDTH = 1          # m
 
-    # Galley Parameters
-    GALLEY_LENGTH = 1           # m
-    GALLEY_WIDTH = 1            # m
+        # Galley Parameters
+        GALLEY_LENGTH = 1           # m
+        GALLEY_WIDTH = 1            # m
 
-    # Passenger parameters
-    PILOT_WEIGHT = 86           # kg
-    CABIN_CREW_WEIGHT = 86      # kg
-    PASS_WEIGHT = 86            # kg
-    CREW_BAG_WEIGHT = 14        # kg
-    PASS_BAG_WEIGHT = 14        # kg
-    # =============================================XX================================
+        # Passenger parameters
+        PILOT_WEIGHT = 86           # kg
+        CABIN_CREW_WEIGHT = 86      # kg
+        PASS_WEIGHT = 86            # kg
+        CREW_BAG_WEIGHT = 14        # kg
+        PASS_BAG_WEIGHT = 14        # kg
+
+        def cargo_containers(type,index):
+            if type == "LD1":
+                dimensions = [1.56,2.44,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD11":
+                dimensions = [3.18,3.28,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD2":
+                dimensions = [1.19,1.66,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD26":
+                dimensions = [3.18,4.16,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD29":
+                dimensions = [3.18,4.82,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD3":
+                dimensions = [1.56,2.11,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD3-45":
+                dimensions = [1.56,2.11,1.19] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD3-45(Rect)":
+                dimensions = [1.56,1.66,1.19] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD3-45W":
+                dimensions = [1.43,2.53,1.14] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD39":
+                dimensions = [3.18,4.82,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD4":
+                dimensions = [2.44,2.54,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD6":
+                dimensions = [3.18,4.16,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD7":
+                dimensions = [3.18,4.16,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD7(Rect)":
+                dimensions = [3.18,3.28,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD8":
+                dimensions = [2.44,3.28,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            elif type == "LD9":
+                dimensions = [3.18,3.28,1.68] # [bottom width, top width, height]
+                return dimensions[index]
+            else:
+                dimensions = [0,0,0] # [bottom width, top width, height]
+                return dimensions[index]
+
+
+        # =============================================XX================================
 
 class Regulations:
     # Climb Gradients
@@ -145,6 +202,7 @@ class Conversion:
     LB_2_KG = 0.4536
 
     M_2_FT = 3.28084
+    M_2_IN = 39.3701
     KM_2_MI = 0.62137
     KM_2_NM = 0.539957
     KM_2_M = 1000
@@ -155,5 +213,3 @@ class Conversion:
     MPERS_2_FTPERMIN = M_2_FT*60
 
     LBFT2_2_KGM2 = LB_2_KG*math.pow(M_2_FT,2)
-
-

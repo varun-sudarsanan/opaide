@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="req_tab">
        <attribute name="title">
@@ -725,6 +725,30 @@
               </widget>
              </item>
              <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_28">
+               <item>
+                <widget class="QPushButton" name="add_data_push">
+                 <property name="text">
+                  <string>Add data points</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_19">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item>
               <widget class="QGraphicsView" name="range_payload_graphics">
                <property name="minimumSize">
                 <size>
@@ -1277,83 +1301,22 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="landing_check">
-                 <property name="text">
-                  <string>Landing Field Length</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_26">
                  <item>
-                  <widget class="QLabel" name="label_95">
+                  <widget class="QCheckBox" name="landing_check">
                    <property name="text">
-                    <string>ISA + </string>
+                    <string>Landing Field Length</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QSpinBox" name="landing_isa_sb"/>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_96">
+                  <widget class="QCheckBox" name="takeoff_check">
                    <property name="text">
-                    <string>C</string>
+                    <string>Takeoff DIstance</string>
                    </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="Line" name="line_2">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_97">
-                   <property name="text">
-                    <string>for altitude</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="landing_alt_inp">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QComboBox" name="landing_alt_m_comb">
-                   <property name="maximumSize">
-                    <size>
-                     <width>40</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <item>
-                    <property name="text">
-                     <string>m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ft</string>
-                    </property>
-                   </item>
                   </widget>
                  </item>
                 </layout>
-               </item>
-               <item>
-                <widget class="QCheckBox" name="takeoff_check_2">
-                 <property name="text">
-                  <string>Takeoff DIstance</string>
-                 </property>
-                </widget>
                </item>
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_25">
@@ -1365,7 +1328,7 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QSpinBox" name="takeoff_isa_sb"/>
+                  <widget class="QSpinBox" name="run_isa_sb"/>
                  </item>
                  <item>
                   <widget class="QLabel" name="label_93">
@@ -1389,7 +1352,7 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="takeoff_alt_inp">
+                  <widget class="QLineEdit" name="run_alt_inp">
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
@@ -1399,7 +1362,7 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QComboBox" name="takeoff_alt_m_comb">
+                  <widget class="QComboBox" name="run_alt_m_comb">
                    <property name="maximumSize">
                     <size>
                      <width>40</width>
@@ -1533,36 +1496,8 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
               <layout class="QGridLayout" name="design_explore_grid">
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_19">
-                 <property name="text">
-                  <string>Rate of Climb</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="4">
-                <widget class="QSlider" name="stall_slider">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_3">
-                 <property name="text">
-                  <string>Takeoff Distance</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="5">
-                <widget class="QLabel" name="takeoff_max_lab">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
                <item row="1" column="0">
-                <widget class="QLabel" name="label_9">
+                <widget class="QLabel" name="ds_landing_lab">
                  <property name="text">
                   <string>Landing Field Length</string>
                  </property>
@@ -1572,6 +1507,13 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                 <widget class="QLabel" name="landing_min_lab">
                  <property name="text">
                   <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="ds_takeoff_lab">
+                 <property name="text">
+                  <string>Takeoff Distance</string>
                  </property>
                 </widget>
                </item>
@@ -1589,52 +1531,24 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                  </property>
                 </widget>
                </item>
-               <item row="5" column="1">
-                <widget class="QLabel" name="turn_rate_lab">
+               <item row="0" column="5">
+                <widget class="QLabel" name="takeoff_max_lab">
                  <property name="text">
                   <string>TextLabel</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="3">
-                <widget class="QLabel" name="takeoff_min_lab">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="4">
-                <widget class="QSlider" name="landing_slider">
+               <item row="3" column="4">
+                <widget class="QSlider" name="stall_slider">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="5">
-                <widget class="QLabel" name="stall_max_lab">
+               <item row="2" column="0">
+                <widget class="QLabel" name="ds_roc_lab">
                  <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="5">
-                <widget class="QLabel" name="landing_max_lab">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="3">
-                <widget class="QLabel" name="roc_min_lab">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="5">
-                <widget class="QLabel" name="roc_max_lab">
-                 <property name="text">
-                  <string>TextLabel</string>
+                  <string>Rate of Climb</string>
                  </property>
                 </widget>
                </item>
@@ -1645,51 +1559,17 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1">
-                <widget class="QLabel" name="roc_current_lab">
+               <item row="4" column="0">
+                <widget class="QLabel" name="ds_min_mach_lab">
+                 <property name="text">
+                  <string>Min. Mach Number</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QLabel" name="takeoff_min_lab">
                  <property name="text">
                   <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
-                <spacer name="horizontalSpacer_10">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLabel" name="takeoff_current_lab">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLabel" name="landing_current_lab">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="4">
-                <widget class="QSlider" name="takeoff_slider">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="4">
-                <widget class="QSlider" name="turn_rate_slider">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -1700,38 +1580,10 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_24">
-                 <property name="text">
-                  <string>Stall Velocity</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_102">
-                 <property name="text">
-                  <string>Turn Rate</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="5">
-                <widget class="QLabel" name="min_mach_max_lab">
+               <item row="2" column="3">
+                <widget class="QLabel" name="roc_min_lab">
                  <property name="text">
                   <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QLabel" name="stall_current_lab">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_58">
-                 <property name="text">
-                  <string>Min. Mach Number</string>
                  </property>
                 </widget>
                </item>
@@ -1749,14 +1601,272 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                  </property>
                 </widget>
                </item>
-               <item row="4" column="1">
-                <widget class="QLabel" name="min_mach_lab">
+               <item row="3" column="0">
+                <widget class="QLabel" name="ds_stall_lab">
+                 <property name="text">
+                  <string>Stall Velocity</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="5">
+                <widget class="QLabel" name="roc_max_lab">
                  <property name="text">
                   <string>TextLabel</string>
                  </property>
                 </widget>
                </item>
+               <item row="1" column="5">
+                <widget class="QLabel" name="landing_max_lab">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="5">
+                <widget class="QLabel" name="stall_max_lab">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QSlider" name="takeoff_slider">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="ds_turn_rate_lab">
+                 <property name="text">
+                  <string>Turn Rate</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="5">
+                <widget class="QLabel" name="min_mach_max_lab">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="4">
+                <widget class="QSlider" name="turn_rate_slider">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="4">
+                <widget class="QSlider" name="landing_slider">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <spacer name="horizontalSpacer_10">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="landing_current_out">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="takeoff_current_out">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="roc_current_out">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLineEdit" name="stall_current_out">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="min_mach_current_out">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>33</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLineEdit" name="turn_rate_current_out">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
               </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout_21">
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="wing_loading_out">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_27">
+               <property name="minimumSize">
+                <size>
+                 <width>98</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Thrust Loading</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_64">
+               <property name="minimumSize">
+                <size>
+                 <width>98</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Wing Loading</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <spacer name="horizontalSpacer_20">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="1" column="3">
+              <spacer name="horizontalSpacer_21">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="thrust_loading_out">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QComboBox" name="comboBox">
+               <item>
+                <property name="text">
+                 <string>N/kg</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QComboBox" name="comboBox_2">
+               <item>
+                <property name="text">
+                 <string>kg/m2</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>ft/lb2</string>
+                </property>
+               </item>
+              </widget>
              </item>
             </layout>
            </item>
@@ -1849,109 +1959,13 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_4">
              <item>
-              <widget class="QGroupBox" name="groupBox_5">
+              <widget class="QGroupBox" name="pass_cabin_gb">
                <property name="title">
                 <string>Passenger</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_5">
                 <item>
                  <layout class="QGridLayout" name="gridLayout_12">
-                  <item row="3" column="1">
-                   <widget class="QSpinBox" name="aisles1_sb">
-                    <property name="maximum">
-                     <number>3</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="3">
-                   <widget class="QSpinBox" name="avg_seats3_sb">
-                    <property name="minimum">
-                     <number>0</number>
-                    </property>
-                    <property name="maximum">
-                     <number>12</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="4" column="0">
-                   <widget class="QLabel" name="label_44">
-                    <property name="text">
-                     <string>Seat Pitch</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="3">
-                   <widget class="QLabel" name="label_16">
-                    <property name="text">
-                     <string>III</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="3">
-                   <widget class="QSpinBox" name="aisles3_sb">
-                    <property name="maximum">
-                     <number>3</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="4" column="2">
-                   <widget class="QLineEdit" name="seat_pitch2_inp"/>
-                  </item>
-                  <item row="4" column="3">
-                   <widget class="QLineEdit" name="seat_pitch3_inp"/>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QLabel" name="label_8">
-                    <property name="text">
-                     <string>II</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_2">
-                    <property name="text">
-                     <string>Class</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="0">
-                   <widget class="QLabel" name="label_20">
-                    <property name="text">
-                     <string>Number of aisles:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QLabel" name="label_4">
-                    <property name="text">
-                     <string>I</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="label_17">
-                    <property name="text">
-                     <string>Avg. seats abreast</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="2">
-                   <widget class="QSpinBox" name="avg_seats2_sb">
-                    <property name="minimum">
-                     <number>0</number>
-                    </property>
-                    <property name="maximum">
-                     <number>12</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="2">
-                   <widget class="QSpinBox" name="aisles2_sb">
-                    <property name="maximum">
-                     <number>3</number>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="2" column="1">
                    <widget class="QSpinBox" name="avg_seats1_sb">
                     <property name="minimum">
@@ -1962,24 +1976,58 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="5" column="0">
-                   <widget class="QLabel" name="label_14">
-                    <property name="text">
-                     <string>Number of Lavatories: </string>
+                  <item row="3" column="3">
+                   <widget class="QSpinBox" name="aisles3_sb">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="maximum">
+                     <number>3</number>
                     </property>
                    </widget>
                   </item>
-                  <item row="6" column="0">
+                  <item row="7" column="0">
                    <widget class="QLabel" name="label_5">
                     <property name="text">
                      <string>Number of Galleys: </string>
                     </property>
                    </widget>
                   </item>
-                  <item row="6" column="3">
-                   <widget class="QSpinBox" name="gall3_sb">
+                  <item row="6" column="0">
+                   <widget class="QLabel" name="label_14">
+                    <property name="text">
+                     <string>Number of Lavatories: </string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="3">
+                   <widget class="QLabel" name="classIII_lab">
+                    <property name="text">
+                     <string>III</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QSpinBox" name="aisles1_sb">
                     <property name="maximum">
-                     <number>1</number>
+                     <number>3</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_2">
+                    <property name="text">
+                     <string>Class</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="3">
+                   <widget class="QSpinBox" name="lav3_sb">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="maximum">
+                     <number>2</number>
                     </property>
                    </widget>
                   </item>
@@ -1991,37 +2039,124 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                    </widget>
                   </item>
                   <item row="5" column="3">
-                   <widget class="QSpinBox" name="lav3_sb">
-                    <property name="maximum">
-                     <number>2</number>
+                   <widget class="QLineEdit" name="seat_pitch3_inp">
+                    <property name="enabled">
+                     <bool>false</bool>
                     </property>
                    </widget>
                   </item>
-                  <item row="6" column="2">
-                   <widget class="QSpinBox" name="gall2_sb">
+                  <item row="2" column="3">
+                   <widget class="QSpinBox" name="avg_seats3_sb">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="minimum">
+                     <number>0</number>
+                    </property>
+                    <property name="maximum">
+                     <number>12</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="7" column="3">
+                   <widget class="QSpinBox" name="gall3_sb">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="maximum">
                      <number>1</number>
                     </property>
                    </widget>
                   </item>
-                  <item row="5" column="2">
+                  <item row="1" column="1">
+                   <widget class="QLabel" name="classI_lab">
+                    <property name="text">
+                     <string>I</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="2">
                    <widget class="QSpinBox" name="lav2_sb">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="maximum">
                      <number>2</number>
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="1">
-                   <widget class="QSpinBox" name="num_class_sb">
+                  <item row="5" column="2">
+                   <widget class="QLineEdit" name="seat_pitch2_inp">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="2">
+                   <widget class="QSpinBox" name="avg_seats2_sb">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="minimum">
                      <number>0</number>
+                    </property>
+                    <property name="maximum">
+                     <number>12</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_17">
+                    <property name="text">
+                     <string>Avg. seats abreast</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="label_20">
+                    <property name="text">
+                     <string>Number of aisles:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="2">
+                   <widget class="QSpinBox" name="aisles2_sb">
+                    <property name="enabled">
+                     <bool>false</bool>
                     </property>
                     <property name="maximum">
                      <number>3</number>
                     </property>
                    </widget>
                   </item>
-                  <item row="5" column="1">
+                  <item row="7" column="2">
+                   <widget class="QSpinBox" name="gall2_sb">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="maximum">
+                     <number>1</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="classII_lab">
+                    <property name="text">
+                     <string>II</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QSpinBox" name="class_num_sb">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>3</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="1">
                    <widget class="QSpinBox" name="lav1_sb">
                     <property name="minimum">
                      <number>0</number>
@@ -2031,14 +2166,44 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="6" column="1">
+                  <item row="7" column="1">
                    <widget class="QSpinBox" name="gall1_sb">
                     <property name="maximum">
                      <number>1</number>
                     </property>
                    </widget>
                   </item>
-                  <item row="4" column="1">
+                  <item row="5" column="0">
+                   <layout class="QHBoxLayout" name="horizontalLayout_30">
+                    <item>
+                     <widget class="QLabel" name="label_44">
+                      <property name="text">
+                       <string>Seat Pitch</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QComboBox" name="seat_pitch_m_comb">
+                      <item>
+                       <property name="text">
+                        <string>m</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>in</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>ft</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="5" column="1">
                    <widget class="QLineEdit" name="seat_pitch1_inp"/>
                   </item>
                  </layout>
@@ -2167,7 +2332,7 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
               </widget>
              </item>
              <item>
-              <widget class="QGroupBox" name="groupBox_8">
+              <widget class="QGroupBox" name="cargo_cabin_gb">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -2223,7 +2388,7 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                    </widget>
                   </item>
                   <item row="2" column="1">
-                   <widget class="QLineEdit" name="width_inp"/>
+                   <widget class="QLineEdit" name="cargo_width_inp"/>
                   </item>
                   <item row="1" column="1">
                    <widget class="QLabel" name="label_35">
@@ -2233,7 +2398,7 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                    </widget>
                   </item>
                   <item row="2" column="0">
-                   <widget class="QLineEdit" name="length_inp"/>
+                   <widget class="QLineEdit" name="cargo_length_inp"/>
                   </item>
                   <item row="1" column="0">
                    <widget class="QLabel" name="label_34">
@@ -2243,7 +2408,7 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                    </widget>
                   </item>
                   <item row="2" column="2">
-                   <widget class="QLineEdit" name="height_inp"/>
+                   <widget class="QLineEdit" name="cargo_height_inp"/>
                   </item>
                  </layout>
                 </item>
@@ -2268,258 +2433,321 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_14">
           <item>
-           <widget class="QGroupBox" name="groupBox_6">
+           <widget class="QGroupBox" name="fuse_cs_gb">
             <property name="title">
              <string>Cross-section</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_17">
              <item>
+              <widget class="QCheckBox" name="fuse_cs_optim">
+               <property name="text">
+                <string>Automatic optimization</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <layout class="QHBoxLayout" name="horizontalLayout_10">
                <item>
-                <layout class="QGridLayout" name="gridLayout_11">
-                 <item row="0" column="1">
-                  <widget class="QLineEdit" name="fuse_floor_inp"/>
-                 </item>
-                 <item row="6" column="0">
-                  <widget class="QLabel" name="label_12">
-                   <property name="text">
-                    <string>Floor Thickness</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_11">
-                   <property name="text">
-                    <string>Inner height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_6">
-                   <property name="text">
-                    <string>Floor lowering from 
+                <layout class="QVBoxLayout" name="verticalLayout_33">
+                 <item>
+                  <layout class="QGridLayout" name="gridLayout_11">
+                   <item row="9" column="1">
+                    <widget class="QLineEdit" name="outer_height_out">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QComboBox" name="floor_lowering_m_comb">
+                     <item>
+                      <property name="text">
+                       <string>m</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>ft</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QLineEdit" name="floor_lowering_inp"/>
+                   </item>
+                   <item row="10" column="0">
+                    <widget class="QLabel" name="label_42">
+                     <property name="text">
+                      <string>Outer Width</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QComboBox" name="inner_width_m_comb">
+                     <item>
+                      <property name="text">
+                       <string>m</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>ft</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="7" column="1">
+                    <widget class="QLineEdit" name="outer_eq_diameter_out">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="9" column="0">
+                    <widget class="QLabel" name="label_25">
+                     <property name="text">
+                      <string>Outer Height</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_11">
+                     <property name="text">
+                      <string>Inner height</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="1">
+                    <widget class="QLineEdit" name="fuse_thickness_out">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="7" column="0">
+                    <widget class="QLabel" name="label_18">
+                     <property name="text">
+                      <string>Outer equivalent 
+diameter</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QComboBox" name="inner_height_m_comb">
+                     <item>
+                      <property name="text">
+                       <string>m</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>ft</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QLineEdit" name="inner_width_out">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QLineEdit" name="inner_height_out">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="8" column="0">
+                    <widget class="QLabel" name="floor_thickness_lab">
+                     <property name="text">
+                      <string>Floor Thickness</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="floor_lowering_lab">
+                     <property name="text">
+                      <string>Floor lowering from 
 fuselage symmetry</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_23">
-                   <property name="text">
-                    <string>Fuselage Thickness</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLineEdit" name="inner_height_inp"/>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="label_22">
-                   <property name="text">
-                    <string>Inner equivalent 
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
+                    <widget class="QLabel" name="label_22">
+                     <property name="text">
+                      <string>Inner equivalent 
 diameter</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="0">
-                  <widget class="QLabel" name="label_18">
-                   <property name="text">
-                    <string>Outer equivalent 
-diameter</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QLineEdit" name="inner_width_inp"/>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_21">
-                   <property name="text">
-                    <string>Inner width</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="1">
-                  <widget class="QLineEdit" name="floor_thickness_inp"/>
-                 </item>
-                 <item row="5" column="1">
-                  <widget class="QLineEdit" name="outer_eq_thickness_inp"/>
-                 </item>
-                 <item row="7" column="1">
-                  <widget class="QLineEdit" name="outer_height_inp"/>
-                 </item>
-                 <item row="3" column="1">
-                  <widget class="QLineEdit" name="inner_eq_diameter_inp"/>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QLineEdit" name="fuse_thickness_inp"/>
-                 </item>
-                 <item row="8" column="0">
-                  <widget class="QLabel" name="label_42">
-                   <property name="text">
-                    <string>Outer Width</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="7" column="0">
-                  <widget class="QLabel" name="label_25">
-                   <property name="text">
-                    <string>Outer Height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="8" column="1">
-                  <widget class="QLineEdit" name="outer_width_inp"/>
-                 </item>
-                 <item row="9" column="1">
-                  <widget class="QLineEdit" name="cabin_ratio_out"/>
-                 </item>
-                 <item row="9" column="0">
-                  <widget class="QLabel" name="label_43">
-                   <property name="text">
-                    <string>Cabin height to 
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QLineEdit" name="inner_eq_diameter_out">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="10" column="1">
+                    <widget class="QLineEdit" name="outer_width_out">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_21">
+                     <property name="text">
+                      <string>Inner width</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="7" column="2">
+                    <widget class="QComboBox" name="outer_eq_diameter_m_comb">
+                     <item>
+                      <property name="text">
+                       <string>m</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>ft</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="6" column="0">
+                    <widget class="QLabel" name="fuse_thickness_lab">
+                     <property name="text">
+                      <string>Fuselage Thickness</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="2">
+                    <widget class="QComboBox" name="fuse_thickness_m_comb">
+                     <item>
+                      <property name="text">
+                       <string>m</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>in</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>ft</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="5" column="2">
+                    <widget class="QComboBox" name="inner_eq_diameter_m_comb">
+                     <item>
+                      <property name="text">
+                       <string>m</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>ft</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="9" column="2">
+                    <widget class="QComboBox" name="outer_height_m_comb">
+                     <item>
+                      <property name="text">
+                       <string>m</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>ft</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="8" column="2">
+                    <widget class="QComboBox" name="floor_thickness_m_comb">
+                     <item>
+                      <property name="text">
+                       <string>m</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>in</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>ft</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QLineEdit" name="cabin_ratio_out">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="8" column="1">
+                    <widget class="QLineEdit" name="floor_thickness_inp"/>
+                   </item>
+                   <item row="10" column="2">
+                    <widget class="QComboBox" name="outer_width_m_comb">
+                     <property name="minimumSize">
+                      <size>
+                       <width>34</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <item>
+                      <property name="text">
+                       <string>m</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>ft</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_43">
+                     <property name="text">
+                      <string>Cabin height to 
 weight ratio</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_2">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
                    </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="2">
-                  <widget class="QComboBox" name="fuse_floor_m_comb">
-                   <item>
-                    <property name="text">
-                     <string>m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ft</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="1" column="2">
-                  <widget class="QComboBox" name="inner_height_m_comb">
-                   <item>
-                    <property name="text">
-                     <string>m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ft</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="2" column="2">
-                  <widget class="QComboBox" name="inner_width_m_comb">
-                   <item>
-                    <property name="text">
-                     <string>m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ft</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="3" column="2">
-                  <widget class="QComboBox" name="inner_eq_diameter_m_comb">
-                   <item>
-                    <property name="text">
-                     <string>m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ft</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="4" column="2">
-                  <widget class="QComboBox" name="fuse_thickness_m_comb">
-                   <item>
-                    <property name="text">
-                     <string>m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ft</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="5" column="2">
-                  <widget class="QComboBox" name="outer_eq_diameter_m_comb">
-                   <item>
-                    <property name="text">
-                     <string>m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ft</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="6" column="2">
-                  <widget class="QComboBox" name="floor_thickness_m_comb">
-                   <item>
-                    <property name="text">
-                     <string>m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ft</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="7" column="2">
-                  <widget class="QComboBox" name="outer_height_m_comb">
-                   <item>
-                    <property name="text">
-                     <string>m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ft</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="8" column="2">
-                  <widget class="QComboBox" name="outer_height_m_comb_2">
-                   <property name="minimumSize">
+                   <property name="sizeHint" stdset="0">
                     <size>
-                     <width>34</width>
-                     <height>0</height>
+                     <width>20</width>
+                     <height>40</height>
                     </size>
                    </property>
-                   <item>
-                    <property name="text">
-                     <string>m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ft</string>
-                    </property>
-                   </item>
-                  </widget>
+                  </spacer>
                  </item>
                 </layout>
                </item>
                <item>
                 <layout class="QVBoxLayout" name="verticalLayout_19">
-                 <item>
-                  <widget class="QGraphicsView" name="cabin_cs_graphics"/>
-                 </item>
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_13">
                    <item>
@@ -2545,6 +2773,29 @@ weight ratio</string>
                    </item>
                   </layout>
                  </item>
+                 <item>
+                  <widget class="QGraphicsView" name="cabin_cs_graphics">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>250</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_4">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
                 </layout>
                </item>
               </layout>
@@ -2553,45 +2804,18 @@ weight ratio</string>
            </widget>
           </item>
           <item>
-           <widget class="QGroupBox" name="groupBox_7">
+           <widget class="QGroupBox" name="fuse_len_gb">
             <property name="title">
              <string>Length</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_20">
              <item>
               <layout class="QGridLayout" name="gridLayout_13">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_30">
-                 <property name="text">
-                  <string>Nose length to diameter ratio</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="nose_length2diameter_inp"/>
+               <item row="3" column="1">
+                <widget class="QLineEdit" name="tail_offset2diameter_inp"/>
                </item>
                <item row="1" column="1">
                 <widget class="QLineEdit" name="nose_offset_inp"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_31">
-                 <property name="text">
-                  <string>Nose offset</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLineEdit" name="tail_length2diamter_inp"/>
-               </item>
-               <item row="4" column="1">
-                <widget class="QLineEdit" name="cabin_length_out">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QLineEdit" name="tail_offset2diamter_inp"/>
                </item>
                <item row="4" column="2">
                 <widget class="QComboBox" name="cabin_length_m_comb">
@@ -2607,17 +2831,34 @@ weight ratio</string>
                  </item>
                 </widget>
                </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="tail_length2diameter_inp"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_30">
+                 <property name="text">
+                  <string>Nose length to diameter ratio</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="cabin_length_out">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_31">
+                 <property name="text">
+                  <string>Nose offset</string>
+                 </property>
+                </widget>
+               </item>
                <item row="4" column="0">
                 <widget class="QLabel" name="label_32">
                  <property name="text">
                   <string>Cabin Length</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_46">
-                 <property name="text">
-                  <string>Tail offset to diameter ratio</string>
                  </property>
                 </widget>
                </item>
@@ -2635,11 +2876,49 @@ weight ratio</string>
                  </item>
                 </widget>
                </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_46">
+                 <property name="text">
+                  <string>Tail offset to diameter ratio</string>
+                 </property>
+                </widget>
+               </item>
                <item row="2" column="0">
                 <widget class="QLabel" name="label_45">
                  <property name="text">
                   <string>Tail length to diameter ratio</string>
                  </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="nose_length2diameter_inp"/>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>Fuselage Length</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLineEdit" name="fuse_length_out">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="2">
+                <widget class="QComboBox" name="fuse_length_m_comb">
+                 <item>
+                  <property name="text">
+                   <string>m</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>ft</string>
+                  </property>
+                 </item>
                 </widget>
                </item>
               </layout>
@@ -3555,7 +3834,7 @@ Volume Coefficient</string>
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="comboBox_16"/>
+                <widget class="QComboBox" name="gear_type_comb"/>
                </item>
               </layout>
              </item>
@@ -3578,7 +3857,7 @@ Volume Coefficient</string>
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QLineEdit" name="lineEdit_27"/>
+                   <widget class="QLineEdit" name="hull_deadrise_inp"/>
                   </item>
                   <item row="1" column="0">
                    <widget class="QLabel" name="label_105">
@@ -3590,21 +3869,21 @@ Volume Coefficient</string>
                   <item row="1" column="1">
                    <layout class="QHBoxLayout" name="horizontalLayout_14">
                     <item>
-                     <widget class="QLabel" name="label_107">
+                     <widget class="QLabel" name="step_min_lab">
                       <property name="text">
                        <string>-5</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QSlider" name="horizontalSlider_6">
+                     <widget class="QSlider" name="step_slider">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLabel" name="label_106">
+                     <widget class="QLabel" name="step_max_lab">
                       <property name="text">
                        <string>5</string>
                       </property>
@@ -3615,7 +3894,7 @@ Volume Coefficient</string>
                  </layout>
                 </item>
                 <item>
-                 <widget class="QGraphicsView" name="graphicsView_6"/>
+                 <widget class="QGraphicsView" name="hull_design_graphics"/>
                 </item>
                </layout>
               </widget>
@@ -3636,7 +3915,7 @@ Volume Coefficient</string>
              <item>
               <layout class="QGridLayout" name="gridLayout_20">
                <item row="0" column="1">
-                <widget class="QLineEdit" name="lineEdit">
+                <widget class="QLineEdit" name="thrust_req_inp">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
