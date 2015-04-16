@@ -114,59 +114,68 @@ class Historic_param:
 
         def cargo_containers(type,index):
             if type == "LD1":
-                dimensions = [1.56,2.44,1.68] # [bottom width, top width, height]
+                dimensions = [1.56,2.44,1.68,1] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD11":
-                dimensions = [3.18,3.28,1.68] # [bottom width, top width, height]
+                dimensions = [3.18,3.28,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD2":
-                dimensions = [1.19,1.66,1.68] # [bottom width, top width, height]
+                dimensions = [1.19,1.66,1.68,1] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD26":
-                dimensions = [3.18,4.16,1.68] # [bottom width, top width, height]
+                dimensions = [3.18,4.16,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD29":
-                dimensions = [3.18,4.82,1.68] # [bottom width, top width, height]
+                dimensions = [3.18,4.82,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD3":
-                dimensions = [1.56,2.11,1.68] # [bottom width, top width, height]
+                dimensions = [1.56,2.11,1.68,1] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD3-45":
-                dimensions = [1.56,2.11,1.19] # [bottom width, top width, height]
+                dimensions = [1.56,2.11,1.19,1] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD3-45(Rect)":
-                dimensions = [1.56,1.66,1.19] # [bottom width, top width, height]
+                dimensions = [1.56,1.66,1.19,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD3-45W":
-                dimensions = [1.43,2.53,1.14] # [bottom width, top width, height]
+                dimensions = [1.43,2.53,1.14,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD39":
-                dimensions = [3.18,4.82,1.68] # [bottom width, top width, height]
+                dimensions = [3.18,4.82,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD4":
-                dimensions = [2.44,2.54,1.68] # [bottom width, top width, height]
+                dimensions = [2.44,2.54,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD6":
-                dimensions = [3.18,4.16,1.68] # [bottom width, top width, height]
+                dimensions = [3.18,4.16,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD7":
-                dimensions = [3.18,4.16,1.68] # [bottom width, top width, height]
+                dimensions = [3.18,4.16,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD7(Rect)":
-                dimensions = [3.18,3.28,1.68] # [bottom width, top width, height]
+                dimensions = [3.18,3.28,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD8":
-                dimensions = [2.44,3.28,1.68] # [bottom width, top width, height]
+                dimensions = [2.44,3.28,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             elif type == "LD9":
-                dimensions = [3.18,3.28,1.68] # [bottom width, top width, height]
+                dimensions = [3.18,3.28,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             else:
-                dimensions = [0,0,0] # [bottom width, top width, height]
+                dimensions = [0,0,0,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
 
 
         # =============================================XX================================
+    class Passenger:
+        # Data for 95% American Male
+        HEIGHT = 1.90                       # m
+        HEAD2WALL_CLEARANCE = 0.06          # m
+        SHOULDER2WALL_CLEARANCE = 0.04      # m
+        SHOULDER_BREADTH = 0.53             # m
+        EYE_HEIGHT_SITTING = 0.87           # m
+        MIDSHOULDER_HEIGHT_SITTING = 0.7    # m
+
 
 class Regulations:
     # Climb Gradients

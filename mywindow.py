@@ -74,7 +74,6 @@ class MyWindow(QtGui.QMainWindow):
     def design_space(self):
 
         # Class I weight Estimation
-
         p = self.req1.pass_num
         c = self.req1.cargo_wt
         p_min = p-5
@@ -121,6 +120,10 @@ class MyWindow(QtGui.QMainWindow):
         self.connect(self.mw.aisles2_sb, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.aisles2_sb)
         self.connect(self.mw.aisles3_sb, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.aisles3_sb)
 
+        self.connect(self.mw.seats_num1_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.seats_num1_inp)
+        self.connect(self.mw.seats_num2_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.seats_num2_inp)
+        self.connect(self.mw.seats_num3_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.seats_num3_inp)
+
         self.connect(self.mw.seat_pitch_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.seat_pitch_m_comb)
         self.connect(self.mw.seat_pitch1_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.seat_pitch1_inp)
         self.connect(self.mw.seat_pitch2_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.seat_pitch2_inp)
@@ -130,11 +133,12 @@ class MyWindow(QtGui.QMainWindow):
         self.connect(self.mw.lav2_sb, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.lav2_sb)
         self.connect(self.mw.lav3_sb, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.lav3_sb)
 
-        self.connect(self.mw.gall1_sb, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.gall1_sb)
-        self.connect(self.mw.gall2_sb, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.gall2_sb)
-        self.connect(self.mw.gall3_sb, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.gall3_sb)
+        self.connect(self.mw.gall1_check,QtCore.SIGNAL(_fromUtf8("stateChanged(int)")),self.gall1_check)
+        self.connect(self.mw.gall2_check,QtCore.SIGNAL(_fromUtf8("stateChanged(int)")),self.gall2_check)
+        self.connect(self.mw.gall3_check,QtCore.SIGNAL(_fromUtf8("stateChanged(int)")),self.gall3_check)
 
         self.connect(self.mw.lower_deck_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.lower_deck_comb)
+        self.connect(self.mw.double_cont_check,QtCore.SIGNAL(_fromUtf8("stateChanged(int)")),self.double_cont_check)
 
         self.connect(self.mw.cargo_length_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.cargo_length_inp)
         self.connect(self.mw.cargo_width_inp, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), self.cargo_width_inp)
@@ -161,6 +165,8 @@ class MyWindow(QtGui.QMainWindow):
 
     def fuse_set_defaults(self):
         self.mw.seat_pitch1_inp.setText(QString.number(self.aircraft1.fuse.cabin.seat_pitch[0]))
+        self.mw.seat_pitch2_inp.setText(QString.number(self.aircraft1.fuse.cabin.seat_pitch[1]))
+        self.mw.seat_pitch3_inp.setText(QString.number(self.aircraft1.fuse.cabin.seat_pitch[2]))
         self.mw.cabin_ratio_slider.setMinimum(70)
         self.mw.cabin_ratio_slider.setMaximum(130)
         self.mw.cabin_ratio_slider.setValue(100)
@@ -168,6 +174,50 @@ class MyWindow(QtGui.QMainWindow):
         self.mw.cabin_ratio_min_lab.setText(str(70/100.0))
         self.mw.cabin_ratio_max_lab.setText(str(130/100.0))
         self.mw.cabin_ratio_out.setText(str(100/100.0))
+        self.fuse_cs_out_update()
+        analysis.cabin_length_sizing(self.aircraft1)
+        self.mw.nose_length2diameter_inp.setText(str(self.aircraft1.fuse.nose_length2dia))
+        self.mw.nose_offset_inp.setText(str(self.aircraft1.fuse.nose_offset))
+        self.mw.tail_length2diameter_inp.setText(str(self.aircraft1.fuse.tail_length2dia))
+        self.mw.tail_offset2diameter_inp.setText(str(self.aircraft1.fuse.tail_offset2dia))
+        self.mw.cabin_length_out.setText(str(self.aircraft1.fuse.cabin.length))
+        self.aircraft1.fuse.update_fuse_length()
+        self.mw.fuse_length_out.setText(str(self.aircraft1.fuse.length))
+
+    def fuse_cs_out_update(self):
+        n = round(self.aircraft1.fuse.cabin.floor_lowering,2)
+        t = str(n)
+        self.mw.floor_lowering_inp.setText(t)
+        n = round(self.aircraft1.fuse.cabin.inner_height,2)
+        t = str(n)
+        self.mw.inner_height_out.setText(t)
+        n = round(self.aircraft1.fuse.cabin.inner_width,2)
+        t = str(n)
+        self.mw.inner_width_out.setText(t)
+        n = round(self.aircraft1.fuse.cabin.inner_eq_dia,2)
+        t = str(n)
+        self.mw.inner_eq_diameter_out.setText(t)
+        n = round(self.aircraft1.fuse.cabin.fuselage_thickness,2)
+        t = str(n)
+        self.mw.fuse_thickness_out.setText(t)
+        n = round(self.aircraft1.fuse.cabin.outer_eq_dia,2)
+        t = str(n)
+        self.mw.outer_eq_diameter_out.setText(t)
+        n = round(self.aircraft1.fuse.cabin.floor_thickness,2)
+        t = str(n)
+        self.mw.floor_thickness_inp.setText(t)
+        n = round(self.aircraft1.fuse.cabin.outer_height,2)
+        t = str(n)
+        self.mw.outer_height_out.setText(t)
+        n = round(self.aircraft1.fuse.cabin.outer_width,2)
+        t = str(n)
+        self.mw.outer_width_out.setText(t)
+
+    def fuse_length_out_update(self):
+        analysis.cabin_length_sizing(self.aircraft1)
+        self.mw.cabin_length_out.setText(str(self.aircraft1.fuse.cabin.length))
+        self.aircraft1.fuse.update_fuse_length()
+        self.mw.fuse_length_out.setText(str(self.aircraft1.fuse.length))
 
     def req_set_defaults(self):
 
@@ -1256,59 +1306,85 @@ class MyWindow(QtGui.QMainWindow):
             self.mw.avg_seats3_sb.setEnabled(False)
             self.mw.aisles2_sb.setEnabled(False)
             self.mw.aisles3_sb.setEnabled(False)
+            self.mw.seats_num2_inp.setEnabled(False)
+            self.mw.seats_num3_inp.setEnabled(False)
             self.mw.seat_pitch2_inp.setEnabled(False)
             self.mw.seat_pitch3_inp.setEnabled(False)
             self.mw.lav2_sb.setEnabled(False)
             self.mw.lav3_sb.setEnabled(False)
-            self.mw.gall2_sb.setEnabled(False)
-            self.mw.gall3_sb.setEnabled(False)
+            self.mw.gall2_check.setEnabled(False)
+            self.mw.gall3_check.setEnabled(False)
+            self.mw.classII_lab.setEnabled(False)
+            self.mw.classIII_lab.setEnabled(False)
+
         elif val == 2:
             self.mw.avg_seats2_sb.setEnabled(True)
             self.mw.avg_seats3_sb.setEnabled(False)
             self.mw.aisles2_sb.setEnabled(True)
             self.mw.aisles3_sb.setEnabled(False)
+            self.mw.seats_num2_inp.setEnabled(True)
+            self.mw.seats_num3_inp.setEnabled(False)
             self.mw.seat_pitch2_inp.setEnabled(True)
             self.mw.seat_pitch3_inp.setEnabled(False)
             self.mw.lav2_sb.setEnabled(True)
             self.mw.lav3_sb.setEnabled(False)
-            self.mw.gall2_sb.setEnabled(True)
-            self.mw.gall3_sb.setEnabled(False)
+            self.mw.gall2_check.setEnabled(True)
+            self.mw.gall3_check.setEnabled(False)
+            self.mw.classII_lab.setEnabled(True)
+            self.mw.classIII_lab.setEnabled(False)
+
         else:
             self.mw.avg_seats2_sb.setEnabled(True)
             self.mw.avg_seats3_sb.setEnabled(True)
             self.mw.aisles2_sb.setEnabled(True)
             self.mw.aisles3_sb.setEnabled(True)
+            self.mw.seats_num3_inp.setEnabled(True)
             self.mw.seat_pitch2_inp.setEnabled(True)
             self.mw.seat_pitch3_inp.setEnabled(True)
             self.mw.lav2_sb.setEnabled(True)
             self.mw.lav3_sb.setEnabled(True)
-            self.mw.gall2_sb.setEnabled(True)
-            self.mw.gall3_sb.setEnabled(True)
+            self.mw.gall2_check.setEnabled(True)
+            self.mw.gall3_check.setEnabled(True)
+            self.mw.classII_lab.setEnabled(True)
+            self.mw.classIII_lab.setEnabled(True)
 
     @pyqtSlot()
     def avg_seats1_sb(self,seat):
         self.aircraft1.fuse.cabin.avg_seats_abr[0] = seat
+        self.fuse_length_out_update()
+        analysis.cabin_cs_sizing(self.aircraft1)
+        self.fuse_cs_out_update()
 
     @pyqtSlot()
     def avg_seats2_sb(self,seat):
         self.aircraft1.fuse.cabin.avg_seats_abr[1] = seat
-
+        self.fuse_length_out_update()
+        analysis.cabin_cs_sizing(self.aircraft1)
+        self.fuse_cs_out_update()
     @pyqtSlot()
     def avg_seats3_sb(self,seat):
         self.aircraft1.fuse.cabin.avg_seats_abr[2] = seat
-
+        self.fuse_length_out_update()
+        analysis.cabin_cs_sizing(self.aircraft1)
+        self.fuse_cs_out_update()
     @pyqtSlot()
     def aisles1_sb(self,num):
         self.aircraft1.fuse.cabin.aisle_num[0] = num
-
+        self.fuse_length_out_update()
+        analysis.cabin_cs_sizing(self.aircraft1)
+        self.fuse_cs_out_update()
     @pyqtSlot()
     def aisles2_sb(self,num):
         self.aircraft1.fuse.cabin.aisle_num[1] = num
-
+        self.fuse_length_out_update()
+        analysis.cabin_cs_sizing(self.aircraft1)
+        self.fuse_cs_out_update()
     @pyqtSlot()
     def aisles3_sb(self,num):
         self.aircraft1.fuse.cabin.aisle_num[2] = num
-
+        self.fuse_length_out_update()
+        analysis.cabin_cs_sizing(self.aircraft1)
+        self.fuse_cs_out_update()
     @pyqtSlot()
     def seat_pitch1_inp(self,text):
         if self.isfloat(text):
@@ -1319,6 +1395,7 @@ class MyWindow(QtGui.QMainWindow):
                 cab.seat_pitch[0] = float(text)/data.Conversion.M_2_FT
             else:
                 cab.seat_pitch[0] = float(text)/data.Conversion.M_2_IN
+            self.fuse_length_out_update()
         elif text == "":
             pass
         else:
@@ -1336,13 +1413,13 @@ class MyWindow(QtGui.QMainWindow):
                 cab.seat_pitch[1] = float(text)/data.Conversion.M_2_FT
             else:
                 cab.seat_pitch[1] = float(text)/data.Conversion.M_2_IN
+            self.fuse_length_out_update()
         elif text == "":
             pass
         else:
             input_warn = QtGui.QMessageBox()
             input_warn.setText("Please enter a number")
             input_warn.exec_()
-
     @pyqtSlot()
     def seat_pitch3_inp(self,text):
         if self.isfloat(text):
@@ -1353,6 +1430,7 @@ class MyWindow(QtGui.QMainWindow):
                 cab.seat_pitch[2] = float(text)/data.Conversion.M_2_FT
             else:
                 cab.seat_pitch[2] = float(text)/data.Conversion.M_2_IN
+            self.fuse_length_out_update()
         elif text == "":
             pass
         else:
@@ -1361,34 +1439,95 @@ class MyWindow(QtGui.QMainWindow):
             input_warn.exec_()
 
     @pyqtSlot()
+    def seats_num1_inp(self,text):
+        print text
+        if self.isdigit(text):
+            n = int(text)
+            self.aircraft1.fuse.cabin.seats_num[0] = n
+            self.fuse_length_out_update()
+        elif text == "":
+            pass
+        else:
+            input_warn = QtGui.QMessageBox()
+            input_warn.setText("Please enter a number")
+            input_warn.exec_()
+
+    @pyqtSlot()
+    def seats_num2_inp(self,text):
+        if self.isdigit(text):
+            n = int(text)
+            self.aircraft1.fuse.cabin.seats_num[1] = n
+            self.fuse_length_out_update()
+        elif text == "":
+            pass
+        else:
+            input_warn = QtGui.QMessageBox()
+            input_warn.setText("Please enter a number")
+            input_warn.exec_()
+    @pyqtSlot()
+    def seats_num3_inp(self,text):
+        if self.isdigit(text):
+            n = int(text)
+            self.aircraft1.fuse.cabin.seats_num[2] = n
+            self.fuse_length_out_update()
+        elif text == "":
+            pass
+        else:
+            input_warn = QtGui.QMessageBox()
+            input_warn.setText("Please enter a number")
+            input_warn.exec_()
+
+
+    @pyqtSlot()
     def lav1_sb(self,val):
         self.aircraft1.fuse.cabin.lav_num[0] = val
-
+        self.fuse_length_out_update()
     @pyqtSlot()
     def lav2_sb(self,val):
         self.aircraft1.fuse.cabin.lav_num[1] = val
-
+        self.fuse_length_out_update()
     @pyqtSlot()
     def lav3_sb(self,val):
         self.aircraft1.fuse.cabin.lav_num[2] = val
-
+        self.fuse_length_out_update()
     @pyqtSlot()
-    def gall1_sb(self,val):
-        self.aircraft1.fuse.cabin.galley_num[0] = val
-
+    def gall1_check(self,val):
+        if val == 2:
+            self.aircraft1.fuse.cabin.galley[0] = val-1
+        else:
+            self.aircraft1.fuse.cabin.galley[0] = val
+        self.fuse_length_out_update()
     @pyqtSlot()
-    def gall2_sb(self,val):
-        self.aircraft1.fuse.cabin.galley_num[1] = val
-
+    def gall2_check(self,val):
+        if val == 2:
+            self.aircraft1.fuse.cabin.galley[1] = val-1
+        else:
+            self.aircraft1.fuse.cabin.galley[1] = val
+        self.fuse_length_out_update()
     @pyqtSlot()
-    def gall3_sb(self,val):
-        self.aircraft1.fuse.cabin.galley_num[2] = val
-
+    def gall3_check(self,val):
+        if val == 2:
+            self.aircraft1.fuse.cabin.galley[2] = val-1
+        else:
+            self.aircraft1.fuse.cabin.galley[2] = val
+        self.fuse_length_out_update()
     @pyqtSlot()
     def lower_deck_comb(self,deck):
-        self.aircraft1.fuse.cabin.container.width_bot = data.Historic_param.Fuselage.cargo_containers(deck,0)
-        self.aircraft1.fuse.cabin.container.width_top = data.Historic_param.Fuselage.cargo_containers(deck,1)
-        self.aircraft1.fuse.cabin.container.height = data.Historic_param.Fuselage.cargo_containers(deck,2)
+        self.aircraft1.fuse.container.width_bot = data.Historic_param.Fuselage.cargo_containers(deck,0)
+        self.aircraft1.fuse.container.width_top = data.Historic_param.Fuselage.cargo_containers(deck,1)
+        self.aircraft1.fuse.container.height = data.Historic_param.Fuselage.cargo_containers(deck,2)
+        if data.Historic_param.Fuselage.cargo_containers(deck,3):
+            self.mw.double_cont_check.setEnabled(True)
+        else:
+            self.mw.double_cont_check.setEnabled(False)
+        analysis.cabin_cs_sizing(self.aircraft1)
+        self.fuse_cs_out_update()
+    @pyqtSlot()
+    def double_cont_check(self,state):
+        if state == 2:
+            self.aircraft1.fuse.container.double = 1
+        else:
+            self.aircraft1.fuse.container.double = 0
 
     @pyqtSlot()
     def cargo_length_inp(self,text):
@@ -1439,6 +1578,8 @@ class MyWindow(QtGui.QMainWindow):
                 self.aircraft1.fuse.cabin.floor_lowering = float(text)
             else:
                 self.aircraft1.fuse.cabin.floor_lowering = float(text)/data.Conversion.M_2_FT
+            analysis.cabin_cs_sizing(self.aircraft1)
+            self.fuse_cs_out_update()
         elif text == "":
             pass
         else:
@@ -1453,6 +1594,8 @@ class MyWindow(QtGui.QMainWindow):
                 self.aircraft1.fuse.cabin.floor_thickness = float(text)
             else:
                 self.aircraft1.fuse.cabin.floor_thickness = float(text)/data.Conversion.M_2_FT
+            analysis.cabin_cs_sizing(self.aircraft1)
+            self.fuse_cs_out_update()
         elif text == "":
             pass
         else:
@@ -1519,6 +1662,7 @@ class MyWindow(QtGui.QMainWindow):
     def cabin_ratio_slider(self,val):
         t = val/100.0
         self.mw.cabin_ratio_out.setText(str(t))
+        self.aircraft1.fuse.cabin.cabin_h2w_ratio = t
 
     # Fuselage Configurations - Conversions
     @pyqtSlot()

@@ -160,15 +160,62 @@ class PlotConst:
         self.t_by_w = [PlotConst.tbyw_start]
         self.w_by_s = [PlotConst.wbys_start]
         self.num_data = 1
-        # i = 0
-        # while self.t_by_w[i] <= PlotConst.tbyw_end:
-        #     temp = self.t_by_w[i]+0.05
-        #     self.t_by_w.append(temp)
-        #     i += 1
-        # self.num_data = len(self.t_by_w)
-        # for j in range(self.num_data):
-        #     if j != 0:
-        #         self.w_by_s.append(PlotConst.wbys_start + 10*j)
 
 def calc_payload(r):
     r.payload_wt = (data.Historic_param.Fuselage.PASS_WEIGHT+data.Historic_param.Fuselage.PASS_BAG_WEIGHT)*r.pass_num + r.cargo_wt
+
+def cabin_length_sizing(a):
+    len = 0
+    if a.fuse.cabin.type == "Passenger":
+        for i in range(a.fuse.cabin.class_num):
+            print i
+            if a.fuse.cabin.avg_seats_abr[i]!=0:
+                a.fuse.cabin.rows_num[i] = a.fuse.cabin.seats_num[i]/a.fuse.cabin.avg_seats_abr[i]
+            print "rows"
+            print a.fuse.cabin.rows_num[i]
+            lav_even = 0
+            galley_len = 0
+            # lavatory length
+            if a.fuse.cabin.lav_num[i]%2 == 0:
+                lav_even = 1
+                lav_len = a.fuse.cabin.lav_num[i]*data.Historic_param.Fuselage.LAVATORY_LENGTH/2
+            else:
+                if a.fuse.cabin.galley[i] == 1:
+                    l = max(data.Historic_param.Fuselage.LAVATORY_LENGTH,data.Historic_param.Fuselage.GALLEY_LENGTH)
+                    lav_len = a.fuse.cabin.lav_num[i]*data.Historic_param.Fuselage.LAVATORY_LENGTH/2+l
+                else:
+                    lav_len = (a.fuse.cabin.lav_num[i]/2+1)*data.Historic_param.Fuselage.LAVATORY_LENGTH
+            if a.fuse.cabin.galley[i] == 1:
+                if lav_even == 1:
+                    galley_len = data.Historic_param.Fuselage.GALLEY_LENGTH
+            else:
+                galley_len = 0
+            len = len + a.fuse.cabin.rows_num[i]*a.fuse.cabin.seat_pitch[i]+lav_len+galley_len
+    a.fuse.cabin.length = len
+
+def cabin_cs_sizing(a):
+    seat_width = 0
+    for i in range(a.fuse.cabin.class_num):
+        seat = a.fuse.cabin.avg_seats_abr[i]
+        aisle = a.fuse.cabin.aisle_num[i]
+        w = seat*data.Historic_param.Fuselage.SEAT_WIDTH + aisle*data.Historic_param.Fuselage.AISLE_WIDTH
+        print w
+        if w>seat_width:
+            seat_width = w
+    print seat_width
+    container_width_top = a.fuse.container.width_top*(a.fuse.container.double+1) # Double the width for two half containers
+    container_width_bot = a.fuse.container.width_bot*(a.fuse.container.double+1) # Double the width for two half containers
+    floor_width = max(seat_width,container_width_top)
+    h = a.fuse.container.height+a.fuse.cabin.floor_thickness+data.Historic_param.Passenger.HEIGHT+data.Historic_param.Passenger.HEAD2WALL_CLEARANCE
+    r = a.fuse.cabin.cabin_h2w_ratio
+    floor_lower = a.fuse.cabin.floor_lowering
+    a.fuse.cabin.inner_width = math.sqrt(math.pow((r*floor_width/2),2)+math.pow(floor_lower,2))/r
+    a.fuse.cabin.inner_height = r*a.fuse.cabin.inner_width
+    if h > a.fuse.cabin.inner_height:
+        print "Height not sufficient"
+    else:
+        print "Height sufficient"
+
+class Fuselage_data:
+    a_ell = 0
+
