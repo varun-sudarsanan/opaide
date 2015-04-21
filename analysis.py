@@ -5,7 +5,7 @@ import math
 
 def class1_estimation(r, a, m):
     calc_payload(r)
-    r.crew_wt = data.Historic_param.PILOT_WEIGHT*r.pilots_n + data.Historic_param.CABIN_CREW_WEIGHT*r.attend_n + data.Historic_param.CREW_BAG_WEIGHT*(r.pilots_n+r.attend_n)  # kg --> For Tourism ops
+    r.crew_wt = data.Historic_param.Fuselage.PILOT_WEIGHT*r.pilots_n + data.Historic_param.Fuselage.CABIN_CREW_WEIGHT*r.attend_n + data.Historic_param.Fuselage.CREW_BAG_WEIGHT*(r.pilots_n+r.attend_n)  # kg --> For Tourism ops
 
     wt = 4*r.payload_wt
 
@@ -41,15 +41,14 @@ def class1_estimation(r, a, m):
 
 def constraint(r, a, m):
     eng_n = a.prop.engines_num
-
     # Take-off ground roll
     tak = PlotConst()
-    tak.name = "togr"
-    tak.w_by_s[0] = r.to_disance_land*data.sigma(r.max_run_alt)*a.cl_lo*tak.t_by_w[0]*data.Atmospheric_param.g*data.Atmospheric_param.RHO_SL
+    tak.name = "tak"
+    tak.w_by_s[0] = r.to_distance_land*data.Atmospheric_param.sigma(r.max_run_alt)*a.cl_lo*tak.t_by_w[0]*data.Atmospheric_param.g*data.Atmospheric_param.RHO_SL
     j=1
     while tak.w_by_s[j-1] < tak.wbys_end:
         tak.t_by_w.append(tak.t_by_w[0]+0.05*j)
-        t = r.to_disance_land*data.sigma(r.max_run_alt)*a.cl_lo*tak.t_by_w[0]*data.Atmospheric_param.g*data.Atmospheric_param.RHO_SL
+        t = r.to_distance_land*data.Atmospheric_param.sigma(r.max_run_alt)*a.cl_lo*tak.t_by_w[j]*data.Atmospheric_param.g*data.Atmospheric_param.RHO_SL
         tak.w_by_s.append(t)
         j += 1
     tak.num_data = len(tak.w_by_s)
@@ -68,7 +67,6 @@ def constraint(r, a, m):
         j += 1
     sscg.num_data = len(sscg.t_by_w)
 
-
     # MAG;
     mag = PlotConst()
     mag.name = "mag"
@@ -82,8 +80,6 @@ def constraint(r, a, m):
         mag.t_by_w.append(thrust_load)
         j += 1
     mag.num_data = len(mag.t_by_w)
-
-
     # Rate of Climb
     roc = PlotConst()
 
@@ -122,6 +118,7 @@ def constraint(r, a, m):
         c += 0.005
 
     roc.num_data = len(roc.w_by_s)
+
     # Landing Constraint
     lan = PlotConst()
 
@@ -129,7 +126,7 @@ def constraint(r, a, m):
     t = data.Conversion.LBFT2_2_KGM2*a.cl_max*data.Atmospheric_param.rho(m.segments[0].height,r.run_msl_isa_t)*(s_land_ft - r.app_dist)/80
     lan.w_by_s[0] = t
     j=1
-    while lan.w_by_s[j-1] < lan.wbys_end:
+    while lan.t_by_w[j-1] < lan.tbyw_end:
         lan.w_by_s.append(t)
         lan.t_by_w.append(lan.t_by_w[0]+0.05*j)
         j += 1
@@ -140,20 +137,19 @@ def constraint(r, a, m):
     t = 0.5*data.Atmospheric_param.rho(0,0)*math.pow(r.v_stall_max,2)*a.cl_max
     stall.w_by_s[0] = t
     j=1
-    while stall.w_by_s[j-1] < stall.w_by_s:
+    while stall.t_by_w[j-1] < stall.tbyw_end:
         stall.w_by_s.append(t)
         stall.t_by_w.append(stall.t_by_w[0]+0.05*j)
         j += 1
-
     #Turn Rate
-
     r.constraints = [tak,sscg,mag,roc,lan,stall]
+    # r.constr_colors = [[0,0,0],[0,0,0],[0,0,0],[255,0,0],[0,0,0],[0,0,0]]
 
 class PlotConst:
     tbyw_start = 0.1
     tbyw_end = 1.5
     wbys_start = 75
-    wbys_end = 500
+    wbys_end = 5000
 
     def __init__(self):
         self.name = ""
@@ -191,31 +187,39 @@ def cabin_length_sizing(a):
             else:
                 galley_len = 0
             len = len + a.fuse.cabin.rows_num[i]*a.fuse.cabin.seat_pitch[i]+lav_len+galley_len
+    elif a.fuse.cabin.type == "Cargo":
+        factor = 0.1
+        len = a.fuse.cabin.cargo_length*(factor+1)
+
     a.fuse.cabin.length = len
 
 def cabin_cs_sizing(a):
-    seat_width = 0
-    for i in range(a.fuse.cabin.class_num):
-        seat = a.fuse.cabin.avg_seats_abr[i]
-        aisle = a.fuse.cabin.aisle_num[i]
-        w = seat*data.Historic_param.Fuselage.SEAT_WIDTH + aisle*data.Historic_param.Fuselage.AISLE_WIDTH
-        print w
-        if w>seat_width:
-            seat_width = w
-    print seat_width
-    container_width_top = a.fuse.container.width_top*(a.fuse.container.double+1) # Double the width for two half containers
-    container_width_bot = a.fuse.container.width_bot*(a.fuse.container.double+1) # Double the width for two half containers
-    floor_width = max(seat_width,container_width_top)
-    h = a.fuse.container.height+a.fuse.cabin.floor_thickness+data.Historic_param.Passenger.HEIGHT+data.Historic_param.Passenger.HEAD2WALL_CLEARANCE
-    r = a.fuse.cabin.cabin_h2w_ratio
-    floor_lower = a.fuse.cabin.floor_lowering
-    a.fuse.cabin.inner_width = math.sqrt(math.pow((r*floor_width/2),2)+math.pow(floor_lower,2))/r
-    a.fuse.cabin.inner_height = r*a.fuse.cabin.inner_width
-    if h > a.fuse.cabin.inner_height:
-        print "Height not sufficient"
-    else:
-        print "Height sufficient"
-
-class Fuselage_data:
-    a_ell = 0
-
+    if a.fuse.cabin.type == "Passenger":
+        seat_width = 0
+        for i in range(a.fuse.cabin.class_num):
+            seat = a.fuse.cabin.avg_seats_abr[i]
+            aisle = a.fuse.cabin.aisle_num[i]
+            w = seat*data.Historic_param.Fuselage.SEAT_WIDTH + aisle*data.Historic_param.Fuselage.AISLE_WIDTH
+            print w
+            if w>seat_width:
+                seat_width = w
+        print seat_width
+        container_width_top = a.fuse.container.width_top*(a.fuse.container.double+1) # Double the width for two half containers
+        container_width_bot = a.fuse.container.width_bot*(a.fuse.container.double+1) # Double the width for two half containers
+        floor_width = max(seat_width,container_width_top)
+        h = a.fuse.container.height+a.fuse.cabin.floor_thickness+data.Historic_param.Passenger.HEIGHT+data.Historic_param.Passenger.HEAD2WALL_CLEARANCE
+        r = a.fuse.cabin.cabin_h2w_ratio
+        floor_lower = a.fuse.cabin.floor_lowering
+        a.fuse.cabin.inner_width = math.sqrt(math.pow((r*floor_width/2),2)+math.pow(floor_lower,2))/r
+        a.fuse.cabin.inner_height = r*a.fuse.cabin.inner_width
+        if h > a.fuse.cabin.inner_height:
+            print "Height not sufficient"
+        else:
+            print "Height sufficient"
+    elif a.fuse.cabin.type == "Cargo":
+        factor = 0.1
+        dia = math.sqrt(math.pow(a.fuse.cabin.cargo_height,2)+math.pow(a.fuse.cabin.cargo_width,2))
+        pt1 = [a.fuse.cabin.cargo_width*(factor+1), a.fuse.cabin.cargo_height*(factor+1)]
+        r = a.fuse.cabin.cabin_h2w_ratio
+        a.fuse.cabin.inner_width = math.sqrt(math.pow((r*pt1[0]),2)+math.pow(pt1[1],2))/r
+        a.fuse.cabin.inner_height = a.fuse.cabin.inner_width*r

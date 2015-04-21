@@ -43,7 +43,7 @@ class Atmospheric_param:
 
     @staticmethod
     def sigma(alt):
-        return (Atmospheric_param.rho(alt)/Atmospheric_param.RHO_SL)
+        return (Atmospheric_param.rho(alt,0)/Atmospheric_param.RHO_SL)
 
 class Historic_param:
     # Constants from historic data
@@ -112,53 +112,54 @@ class Historic_param:
         CREW_BAG_WEIGHT = 14        # kg
         PASS_BAG_WEIGHT = 14        # kg
 
-        def cargo_containers(type,index):
-            if type == "LD1":
+        @staticmethod
+        def cargo_containers(container,index):
+            if container == "LD1":
                 dimensions = [1.56,2.44,1.68,1] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD11":
+            elif container == "LD11":
                 dimensions = [3.18,3.28,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD2":
+            elif container == "LD2":
                 dimensions = [1.19,1.66,1.68,1] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD26":
+            elif container == "LD26":
                 dimensions = [3.18,4.16,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD29":
+            elif container == "LD29":
                 dimensions = [3.18,4.82,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD3":
+            elif container == "LD3":
                 dimensions = [1.56,2.11,1.68,1] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD3-45":
+            elif container == "LD3-45":
                 dimensions = [1.56,2.11,1.19,1] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD3-45(Rect)":
+            elif container == "LD3-45(Rect)":
                 dimensions = [1.56,1.66,1.19,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD3-45W":
+            elif container == "LD3-45W":
                 dimensions = [1.43,2.53,1.14,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD39":
+            elif container == "LD39":
                 dimensions = [3.18,4.82,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD4":
+            elif container == "LD4":
                 dimensions = [2.44,2.54,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD6":
+            elif container == "LD6":
                 dimensions = [3.18,4.16,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD7":
+            elif container == "LD7":
                 dimensions = [3.18,4.16,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD7(Rect)":
+            elif container == "LD7(Rect)":
                 dimensions = [3.18,3.28,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD8":
+            elif container == "LD8":
                 dimensions = [2.44,3.28,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
-            elif type == "LD9":
+            elif container == "LD9":
                 dimensions = [3.18,3.28,1.68,0] # [bottom width, top width, height, half container]
                 return dimensions[index]
             else:
@@ -167,6 +168,13 @@ class Historic_param:
 
 
         # =============================================XX================================
+    class Wing:
+        @staticmethod
+        def flap_factor(flap_type):
+            if flap_type == "None":
+                return 1
+            elif flap_type == "Fowler":
+                return 2.5
     class Passenger:
         # Data for 95% American Male
         HEIGHT = 1.90                       # m

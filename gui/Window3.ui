@@ -1554,6 +1554,9 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
                </item>
                <item row="2" column="4">
                 <widget class="QSlider" name="roc_slider">
+                 <property name="singleStep">
+                  <number>1</number>
+                 </property>
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -1886,7 +1889,7 @@ font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton">
+              <widget class="QPushButton" name="set_refined_req_push">
                <property name="text">
                 <string>Set refined requirements</string>
                </property>
@@ -3025,141 +3028,25 @@ weight ratio</string>
               <layout class="QVBoxLayout" name="verticalLayout_22">
                <item>
                 <layout class="QGridLayout" name="gridLayout_8">
-                 <item row="3" column="2">
-                  <widget class="QLineEdit" name="wingspan_out">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="10" column="2">
-                  <widget class="QComboBox" name="flap_type_comb">
-                   <item>
-                    <property name="text">
-                     <string>Fowler</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="label_54">
+                 <item row="7" column="0">
+                  <widget class="QLabel" name="label_87">
                    <property name="text">
-                    <string>Wingspan</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="10" column="0">
-                  <widget class="QLabel" name="label_69">
-                   <property name="text">
-                    <string>Flap type</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="3">
-                  <widget class="QComboBox" name="dihedral_deg_comb">
-                   <item>
-                    <property name="text">
-                     <string>deg</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>rad</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="11" column="0">
-                  <widget class="QPushButton" name="add_wing_push">
-                   <property name="text">
-                    <string>Add Wing</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="7" column="2">
-                  <widget class="QLineEdit" name="sweep_inp"/>
-                 </item>
-                 <item row="6" column="2">
-                  <widget class="QLineEdit" name="dihedral_inp"/>
-                 </item>
-                 <item row="0" column="3">
-                  <widget class="QComboBox" name="planform_area_sqm_comb">
-                   <item>
-                    <property name="text">
-                     <string>sq. m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>sq. ft</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="5" column="2">
-                  <widget class="QPushButton" name="root_airfoil_push">
-                   <property name="text">
-                    <string>Root Airfoil</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="2">
-                  <widget class="QLineEdit" name="planform_area_out">
-                   <property name="enabled">
-                    <bool>false</bool>
+                    <string>L.E Sweep</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="2">
                   <widget class="QLineEdit" name="wing_aspect_ratio_inp"/>
                  </item>
-                 <item row="5" column="3">
-                  <widget class="QPushButton" name="tip_airfoil_push">
-                   <property name="text">
-                    <string>Tip Airfoil</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="0">
-                  <widget class="QLabel" name="label_62">
-                   <property name="text">
-                    <string>Dihedral</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_48">
-                   <property name="text">
-                    <string>Planform Area</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="8" column="2">
-                  <widget class="QLineEdit" name="e_inp"/>
-                 </item>
-                 <item row="7" column="3">
-                  <widget class="QComboBox" name="sweep_deg_comb">
-                   <item>
-                    <property name="text">
-                     <string>deg</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>rad</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_47">
-                   <property name="text">
-                    <string>Aspect Ratio</string>
+                  <widget class="QLineEdit" name="wing_e_out">
+                   <property name="enabled">
+                    <bool>false</bool>
                    </property>
                   </widget>
                  </item>
                  <item row="3" column="3">
-                  <widget class="QComboBox" name="wingspan_m_comb_2">
+                  <widget class="QComboBox" name="wingspan_m_comb">
                    <item>
                     <property name="text">
                      <string>m</string>
@@ -3172,10 +3059,31 @@ weight ratio</string>
                    </item>
                   </widget>
                  </item>
-                 <item row="7" column="0">
-                  <widget class="QLabel" name="label_87">
+                 <item row="3" column="2">
+                  <widget class="QLineEdit" name="wingspan_out">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="3">
+                  <widget class="QComboBox" name="wing_dihedral_deg_comb">
+                   <item>
+                    <property name="text">
+                     <string>deg</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>rad</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="5" column="2">
+                  <widget class="QPushButton" name="root_airfoil_push">
                    <property name="text">
-                    <string>L.E Sweep</string>
+                    <string>Root Airfoil</string>
                    </property>
                   </widget>
                  </item>
@@ -3194,6 +3102,69 @@ Efficiency (e)</string>
                    </property>
                   </widget>
                  </item>
+                 <item row="10" column="0">
+                  <widget class="QLabel" name="label_69">
+                   <property name="text">
+                    <string>Flap type</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="10" column="2">
+                  <widget class="QComboBox" name="flap_type_comb">
+                   <item>
+                    <property name="text">
+                     <string>None</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Fowler</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="7" column="3">
+                  <widget class="QComboBox" name="wing_sweep_deg_comb">
+                   <item>
+                    <property name="text">
+                     <string>deg</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>rad</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_54">
+                   <property name="text">
+                    <string>Wingspan</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QLineEdit" name="planform_area_out">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_48">
+                   <property name="text">
+                    <string>Planform Area</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_47">
+                   <property name="text">
+                    <string>Aspect Ratio</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="4" column="2">
                   <widget class="QLineEdit" name="wing_chord_out">
                    <property name="enabled">
@@ -3201,11 +3172,56 @@ Efficiency (e)</string>
                    </property>
                   </widget>
                  </item>
+                 <item row="6" column="0">
+                  <widget class="QLabel" name="label_62">
+                   <property name="text">
+                    <string>Dihedral</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QComboBox" name="planform_area_sqm_comb">
+                   <item>
+                    <property name="text">
+                     <string>sq. m</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>sq. ft</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="6" column="2">
+                  <widget class="QLineEdit" name="wing_dihedral_inp"/>
+                 </item>
+                 <item row="5" column="3">
+                  <widget class="QPushButton" name="tip_airfoil_push">
+                   <property name="text">
+                    <string>Tip Airfoil</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="4" column="0">
                   <widget class="QLabel" name="label_55">
                    <property name="text">
-                    <string>Chord</string>
+                    <string>Mean Chord</string>
                    </property>
+                  </widget>
+                 </item>
+                 <item row="9" column="3">
+                  <widget class="QComboBox" name="wing_dist_CG_m_comb">
+                   <item>
+                    <property name="text">
+                     <string>m</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>ft</string>
+                    </property>
+                   </item>
                   </widget>
                  </item>
                  <item row="4" column="3">
@@ -3225,6 +3241,13 @@ Efficiency (e)</string>
                  <item row="2" column="2">
                   <widget class="QLineEdit" name="wing_taper_ratio_inp"/>
                  </item>
+                 <item row="9" column="0">
+                  <widget class="QLabel" name="label_109">
+                   <property name="text">
+                    <string>Distance from CG</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="label_49">
                    <property name="text">
@@ -3235,21 +3258,71 @@ Efficiency (e)</string>
                  <item row="9" column="2">
                   <layout class="QHBoxLayout" name="horizontalLayout_23">
                    <item>
-                    <widget class="QLabel" name="dist_CG_min_lab">
+                    <widget class="QLineEdit" name="wing_dist_CG_out">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>50</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="Line" name="line_4">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="wing_dist_CG_min_lab">
+                     <property name="minimumSize">
+                      <size>
+                       <width>25</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>1677216</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
                      <property name="text">
                       <string>- 5</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSlider" name="dist_CG_slider">
+                    <widget class="QSlider" name="wing_dist_CG_slider">
+                     <property name="minimumSize">
+                      <size>
+                       <width>30</width>
+                       <height>0</height>
+                      </size>
+                     </property>
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="dist_CG_max_lab">
+                    <widget class="QLabel" name="wing_dist_CG_max_lab">
+                     <property name="minimumSize">
+                      <size>
+                       <width>25</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>25</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
                      <property name="text">
                       <string>5</string>
                      </property>
@@ -3257,26 +3330,8 @@ Efficiency (e)</string>
                    </item>
                   </layout>
                  </item>
-                 <item row="9" column="3">
-                  <widget class="QComboBox" name="dist_CG_m_comb">
-                   <item>
-                    <property name="text">
-                     <string>m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ft</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="9" column="0">
-                  <widget class="QLabel" name="label_109">
-                   <property name="text">
-                    <string>Distance from CG</string>
-                   </property>
-                  </widget>
+                 <item row="7" column="2">
+                  <widget class="QLineEdit" name="wing_sweep_inp"/>
                  </item>
                 </layout>
                </item>
@@ -3291,86 +3346,6 @@ Efficiency (e)</string>
               <layout class="QVBoxLayout" name="verticalLayout_25">
                <item>
                 <layout class="QGridLayout" name="gridLayout_16">
-                 <item row="3" column="2">
-                  <widget class="QComboBox" name="vert_span_m_comb">
-                   <item>
-                    <property name="text">
-                     <string>m</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ft</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLineEdit" name="vert_aspect_ratio_inp"/>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_59">
-                   <property name="text">
-                    <string>Aspect Ratio</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="1">
-                  <widget class="QComboBox" name="vert_airfoil_comb"/>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="label_53">
-                   <property name="text">
-                    <string>Span</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QComboBox" name="vert_surface_comb">
-                   <item>
-                    <property name="text">
-                     <string>Surface 1</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Surface 2</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Surface 3</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QLineEdit" name="vert_taper_ratio_inp"/>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_65">
-                   <property name="text">
-                    <string>Chord</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="1">
-                  <widget class="QLineEdit" name="vert_span_inp"/>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_60">
-                   <property name="text">
-                    <string>Taper Ratio</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="0">
-                  <widget class="QLabel" name="label_51">
-                   <property name="text">
-                    <string>Airfoil</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="4" column="2">
                   <widget class="QComboBox" name="vert_chord_m_comb">
                    <item>
@@ -3385,10 +3360,64 @@ Efficiency (e)</string>
                    </item>
                   </widget>
                  </item>
-                 <item row="4" column="1">
-                  <widget class="QLineEdit" name="lineEdit_31"/>
+                 <item row="3" column="2">
+                  <widget class="QComboBox" name="vert_span_m_comb">
+                   <item>
+                    <property name="text">
+                     <string>m</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>ft</string>
+                    </property>
+                   </item>
+                  </widget>
                  </item>
-                 <item row="6" column="2">
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_59">
+                   <property name="text">
+                    <string>Aspect Ratio</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="vert_aspect_ratio_inp"/>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_60">
+                   <property name="text">
+                    <string>Taper Ratio</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QComboBox" name="vert_surface_comb">
+                   <item>
+                    <property name="text">
+                     <string>Surface 1</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QLineEdit" name="vert_chord_out">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_53">
+                   <property name="text">
+                    <string>Span</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLineEdit" name="vert_taper_ratio_inp"/>
+                 </item>
+                 <item row="7" column="2">
                   <widget class="QComboBox" name="vert_long_dist_m_comb">
                    <item>
                     <property name="text">
@@ -3402,24 +3431,72 @@ Efficiency (e)</string>
                    </item>
                   </widget>
                  </item>
-                 <item row="6" column="1">
-                  <layout class="QHBoxLayout" name="horizontalLayout_16">
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_65">
+                   <property name="text">
+                    <string>Mean Chord</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QLineEdit" name="vert_span_inp"/>
+                 </item>
+                 <item row="8" column="1">
+                  <layout class="QHBoxLayout" name="horizontalLayout_22">
                    <item>
-                    <widget class="QLabel" name="vert_long_dist_min_lab">
+                    <widget class="QLineEdit" name="vert_lat_dist_out">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>50</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="Line" name="line_7">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="vert_lat_dist_min_lab">
+                     <property name="minimumSize">
+                      <size>
+                       <width>25</width>
+                       <height>0</height>
+                      </size>
+                     </property>
                      <property name="text">
                       <string>- 5</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSlider" name="vert_long_dist_slider">
+                    <widget class="QSlider" name="vert_lat_dist_slider">
+                     <property name="minimumSize">
+                      <size>
+                       <width>30</width>
+                       <height>0</height>
+                      </size>
+                     </property>
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="vert_long_dist_max_lab">
+                    <widget class="QLabel" name="vert_lat_dist_max_lab">
+                     <property name="minimumSize">
+                      <size>
+                       <width>25</width>
+                       <height>0</height>
+                      </size>
+                     </property>
                      <property name="text">
                       <string>5</string>
                      </property>
@@ -3427,7 +3504,7 @@ Efficiency (e)</string>
                    </item>
                   </layout>
                  </item>
-                 <item row="7" column="2">
+                 <item row="8" column="2">
                   <widget class="QComboBox" name="vert_lat_dist_m_comb">
                    <item>
                     <property name="text">
@@ -3441,32 +3518,62 @@ Efficiency (e)</string>
                    </item>
                   </widget>
                  </item>
-                 <item row="7" column="0">
-                  <widget class="QLabel" name="label_84">
-                   <property name="text">
-                    <string>Lateral distance
-from CG</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="7" column="1">
-                  <layout class="QHBoxLayout" name="horizontalLayout_22">
+                  <layout class="QHBoxLayout" name="horizontalLayout_16">
                    <item>
-                    <widget class="QLabel" name="vert_lat_dist_min_lab">
+                    <widget class="QLineEdit" name="vert_long_dist_out">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>50</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="Line" name="line_5">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="vert_long_dist_min_lab">
+                     <property name="minimumSize">
+                      <size>
+                       <width>25</width>
+                       <height>0</height>
+                      </size>
+                     </property>
                      <property name="text">
                       <string>- 5</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSlider" name="vert_lat_dist_slider">
+                    <widget class="QSlider" name="vert_long_dist_slider">
+                     <property name="minimumSize">
+                      <size>
+                       <width>30</width>
+                       <height>0</height>
+                      </size>
+                     </property>
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="vert_lat_dist_max_lab">
+                    <widget class="QLabel" name="vert_long_dist_max_lab">
+                     <property name="minimumSize">
+                      <size>
+                       <width>25</width>
+                       <height>0</height>
+                      </size>
+                     </property>
                      <property name="text">
                       <string>5</string>
                      </property>
@@ -3474,11 +3581,54 @@ from CG</string>
                    </item>
                   </layout>
                  </item>
-                 <item row="6" column="0">
+                 <item row="8" column="0">
+                  <widget class="QLabel" name="label_84">
+                   <property name="text">
+                    <string>Lateral distance
+from CG</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="7" column="0">
                   <widget class="QLabel" name="label_63">
                    <property name="text">
                     <string>Longitudinal distance
 from CG</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="label_71">
+                   <property name="text">
+                    <string>Planform Area</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QLineEdit" name="vert_area_out">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="2">
+                  <widget class="QComboBox" name="vert_area_sqm_comb">
+                   <item>
+                    <property name="text">
+                     <string>sq. m</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>sq. ft</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="6" column="0">
+                  <widget class="QPushButton" name="vert_airfoil_push">
+                   <property name="text">
+                    <string>Add Airfoil</string>
                    </property>
                   </widget>
                  </item>
@@ -3503,6 +3653,38 @@ from CG</string>
                    </property>
                    <property name="text">
                     <string>Add Surface</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="rem_vert_surface_push">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>83</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Remove Surface</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="update_vert_surface_push">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>65</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Update</string>
                    </property>
                   </widget>
                  </item>
@@ -3545,8 +3727,35 @@ from CG</string>
               <layout class="QVBoxLayout" name="verticalLayout_26">
                <item>
                 <layout class="QGridLayout" name="gridLayout_19">
-                 <item row="5" column="1">
-                  <widget class="QComboBox" name="horiz_airfoil_comb"/>
+                 <item row="8" column="1">
+                  <widget class="QPushButton" name="rem_horiz_surface_push">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>83</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Remove Surface</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="8" column="0">
+                  <widget class="QPushButton" name="add_horiz_surface_push">
+                   <property name="text">
+                    <string>Add Surface</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QLineEdit" name="horiz_chord_out">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
                  </item>
                  <item row="0" column="0">
                   <widget class="QComboBox" name="horiz_surface_comb">
@@ -3555,51 +3764,10 @@ from CG</string>
                      <string>Surface 1</string>
                     </property>
                    </item>
-                   <item>
-                    <property name="text">
-                     <string>Surface 2</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>Surface 3</string>
-                    </property>
-                   </item>
                   </widget>
                  </item>
-                 <item row="2" column="1">
-                  <widget class="QLineEdit" name="horiz_taper_ratio_inp"/>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_66">
-                   <property name="text">
-                    <string>Aspect Ratio</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QLineEdit" name="horiz_chord_inp"/>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_67">
-                   <property name="text">
-                    <string>Taper Ratio</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="0">
-                  <widget class="QLabel" name="label_52">
-                   <property name="text">
-                    <string>Airfoil</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_70">
-                   <property name="text">
-                    <string>Chord</string>
-                   </property>
-                  </widget>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="horiz_aspect_ratio_inp"/>
                  </item>
                  <item row="3" column="2">
                   <widget class="QComboBox" name="horiz_span_m_comb">
@@ -3615,6 +3783,13 @@ from CG</string>
                    </item>
                   </widget>
                  </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_67">
+                   <property name="text">
+                    <string>Taper Ratio</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="3" column="0">
                   <widget class="QLabel" name="label_68">
                    <property name="text">
@@ -3622,11 +3797,45 @@ from CG</string>
                    </property>
                   </widget>
                  </item>
+                 <item row="7" column="0">
+                  <widget class="QLabel" name="label_73">
+                   <property name="text">
+                    <string>Distance from CG</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_66">
+                   <property name="text">
+                    <string>Aspect Ratio</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="9" column="0">
+                  <spacer name="verticalSpacer_6">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLineEdit" name="horiz_taper_ratio_inp"/>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_70">
+                   <property name="text">
+                    <string>Mean Chord</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="3" column="1">
                   <widget class="QLineEdit" name="horiz_span_inp"/>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLineEdit" name="horiz_aspect_ratio_inp"/>
                  </item>
                  <item row="4" column="2">
                   <widget class="QComboBox" name="horiz_chord_m_comb">
@@ -3642,34 +3851,70 @@ from CG</string>
                    </item>
                   </widget>
                  </item>
-                 <item row="6" column="0">
-                  <widget class="QLabel" name="label_73">
-                   <property name="text">
-                    <string>Distance from CG</string>
-                   </property>
-                  </widget>
+                 <item row="7" column="1">
+                  <layout class="QHBoxLayout" name="horizontalLayout_17">
+                   <item>
+                    <widget class="QLineEdit" name="horiz_dist_CG_out">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>50</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="Line" name="line_8">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="horiz_dist_CG_min_lab">
+                     <property name="minimumSize">
+                      <size>
+                       <width>25</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>- 5</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSlider" name="horiz_dist_CG_slider">
+                     <property name="minimumSize">
+                      <size>
+                       <width>30</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="horiz_dist_CG_max_lab">
+                     <property name="minimumSize">
+                      <size>
+                       <width>25</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>5</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </item>
-                 <item row="8" column="0">
-                  <spacer name="verticalSpacer_6">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item row="7" column="0">
-                  <widget class="QPushButton" name="add_horiz_surface_push">
-                   <property name="text">
-                    <string>Add Surface</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="2">
+                 <item row="7" column="2">
                   <widget class="QComboBox" name="horiz_dist_CG_m_comb">
                    <item>
                     <property name="text">
@@ -3683,30 +3928,56 @@ from CG</string>
                    </item>
                   </widget>
                  </item>
-                 <item row="6" column="1">
-                  <layout class="QHBoxLayout" name="horizontalLayout_17">
+                 <item row="6" column="0">
+                  <widget class="QPushButton" name="horiz_airfoil_push">
+                   <property name="text">
+                    <string>Add Airfoil</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="8" column="2">
+                  <widget class="QPushButton" name="update_horiz_surface_push">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>65</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Update</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="label_74">
+                   <property name="text">
+                    <string>Planform Area</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QLineEdit" name="horiz_area_out">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="2">
+                  <widget class="QComboBox" name="horiz_area_sqm_comb">
                    <item>
-                    <widget class="QLabel" name="horiz_dist_CG_min_lab">
-                     <property name="text">
-                      <string>- 5</string>
-                     </property>
-                    </widget>
+                    <property name="text">
+                     <string>sq. m</string>
+                    </property>
                    </item>
                    <item>
-                    <widget class="QSlider" name="horiz_dist_CG_slider">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                    </widget>
+                    <property name="text">
+                     <string>sq. ft</string>
+                    </property>
                    </item>
-                   <item>
-                    <widget class="QLabel" name="horiz_dist_CG_max_lab">
-                     <property name="text">
-                      <string>5</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
+                  </widget>
                  </item>
                 </layout>
                </item>

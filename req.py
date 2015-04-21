@@ -26,11 +26,11 @@ class AircraftRequirements:
         self.cargo_wt = 200.0
         self.pilots_n = 2
 
-        self.to_distance_land = 0.0
-        self.to_distance_water = 0.0
+        self.to_distance_land = 400.0
+        self.to_distance_water = 400.0
 
-        self.la_distance_land = 0.0
-        self.la_distance_water = 0.0
+        self.la_distance_land = 400.0
+        self.la_distance_water = 400.0
 
         self.attend_n = self.attend_num(self.pass_num)
         self.payload_wt = 2200        # kg
