@@ -145,6 +145,18 @@ def constraint(r, a, m):
     r.constraints = [tak,sscg,mag,roc,lan,stall]
     # r.constr_colors = [[0,0,0],[0,0,0],[0,0,0],[255,0,0],[0,0,0],[0,0,0]]
 
+# def design_point(r):
+#     # Max from data points
+#     min_t_by_w = []
+#     max_w_by_s = []
+#     l = len(r.constraints)
+#     for i in range(l):
+#         min_t_by_w.append(min(r.constraints[0].t_by_w))
+#         max_w_by_s.append(max(r.constraints[0].w_by_s))
+#
+#     for i in range(l):
+
+
 class PlotConst:
     tbyw_start = 0.1
     tbyw_end = 1.5
@@ -223,3 +235,21 @@ def cabin_cs_sizing(a):
         r = a.fuse.cabin.cabin_h2w_ratio
         a.fuse.cabin.inner_width = math.sqrt(math.pow((r*pt1[0]),2)+math.pow(pt1[1],2))/r
         a.fuse.cabin.inner_height = a.fuse.cabin.inner_width*r
+
+def horiz_tail_vol_coeff(a):
+    p = 0
+    for i in range(a.stab.ht_num+1):
+        p += a.stab.ht[i].ref_area*a.stab.ht[i].long_dist_CG
+        print "In", p
+
+    if a.wing.ref_area!=0 and a.wing.mean_chord!=0:
+        print "Condition Satisfied"
+        a.stab.horiz_vol_coeff = p/(a.wing.ref_area*a.wing.mean_chord)
+    print "Coeff", a.stab.horiz_vol_coeff
+
+def vert_tail_vol_coeff(a):
+    p = 0
+    for i in range(a.stab.vt_num):
+        p += a.stab.vt[i].ref_area*a.stab.vt[i].long_dist_CG
+    if a.wing.ref_area!=0 and a.wing.span!=0:
+        a.stab.vert_vol_coeff = p/(a.wing.ref_area*a.wing.span)

@@ -8,7 +8,7 @@ import req
 import config
 import mission
 import analysis
-import pyqtgraph
+import pyqtgraph as pg
 import time
 
 from gui import Window3, airfoil
@@ -31,10 +31,17 @@ class MyWindow(QtGui.QMainWindow):
         self.mw = Window3.Ui_MainWindow()
         super(MyWindow, self).__init__()
         self.mw.setupUi(self)
+
+        self.mw.pw = ConstraintGraph()  ## giving the plots names allows us to link their axes together
+        self.mw.graphs_hlayout.addWidget(self.mw.pw)
+        self.mw.pw.setLabel('left','Thrust Loading',units = 'N/kg')
+        self.mw.pw.setLabel('bottom','Wing Loading',units = 'kg/m3')
+
         self.mw.tabWidget.setCurrentIndex(0)
         self.update_gui()
         self.update_objects()
         self.show()
+        # self.mw.pw.show()
 
     def update_gui(self):
         self.requirements()
@@ -51,7 +58,6 @@ class MyWindow(QtGui.QMainWindow):
 
     def update_objects(self):
         self.req1.update_req(self.aircraft1)
-        self.aircraft1.update_config()
         self.mission1.update_mission()
 
     def requirements(self):
@@ -440,91 +446,173 @@ class MyWindow(QtGui.QMainWindow):
 
     def wing_stab(self):
         self.wing_stab_set_defaults()
-        # Add airfoil push buttons
-        self.connect(self.mw.root_airfoil_push,QtCore.SIGNAL(_fromUtf8("clicked()")),self.root_airfoil_push)
-        self.connect(self.mw.tip_airfoil_push,QtCore.SIGNAL(_fromUtf8("clicked()")),self.tip_airfoil_push)
+        self.wing_data()
+        self.vert_surf_data()
+        self.horiz_surf_data()
 
-        self.connect(self.mw.wing_aspect_ratio_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.wing_aspect_ratio_inp)
-        self.connect(self.mw.wing_taper_ratio_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.wing_taper_ratio_inp)
-        self.connect(self.mw.wing_sweep_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.wing_sweep_inp)
-        self.connect(self.mw.wing_dihedral_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.wing_dihedral_inp)
+        # Output Data
+        p_min = 0
+        p_max = self.aircraft1.fuse.length*10
+        p_curr = (p_max/2.0)*10
+        self.mw.CG_pos_slider.setMinimum(p_min)
+        self.mw.CG_pos_slider.setMaximum(p_max)
+        self.mw.CG_pos_slider.setValue(p_curr)
+        t = round((p_min/10.0),2)
+        self.mw.CG_pos_min_lab.setText(str(t))
+        t = round((p_max/10.0),2)
+        self.mw.CG_pos_max_lab.setText(str(t))
+        t = round((p_curr/10.0),2)
+        self.mw.CG_pos_out.setText(str(t))
+        analysis.horiz_tail_vol_coeff(self.aircraft1)
+        analysis.vert_tail_vol_coeff(self.aircraft1)
+        t = round(self.aircraft1.stab.horiz_vol_coeff,2)
+        self.mw.horiz_coeff_out.setText(str(t))
+        t = round(self.aircraft1.stab.vert_vol_coeff,2)
+        self.mw.vert_coeff_out.setText(str(t))
 
-        # Wing Sliders
-        d_min = -50
-        d_max = 50
-        d_curr = 0
-
-        self.mw.wing_dist_CG_slider.setMinimum(d_min)
-        self.mw.wing_dist_CG_slider.setMaximum(d_max)
-        self.mw.wing_dist_CG_slider.setValue(d_curr)
-        self.mw.wing_dist_CG_min_lab.setText(str(d_min/10.0))
-        self.mw.wing_dist_CG_max_lab.setText(str(d_max/10.0))
-        self.mw.wing_dist_CG_out.setText(str(d_curr/10.0))
-
-        self.connect(self.mw.wing_dist_CG_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.wing_dist_CG_slider)
-        self.connect(self.mw.flap_type_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")),self.flap_type_comb)
-
-        # Unit Conversions
-        self.connect(self.mw.planform_area_sqm_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.planform_area_sqm_comb)
-        self.connect(self.mw.wingspan_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.wingspan_m_comb)
-        self.connect(self.mw.wing_chord_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.wing_chord_m_comb)
-        self.connect(self.mw.wing_dihedral_deg_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.wing_dihedral_deg_comb)
-        self.connect(self.mw.wing_sweep_deg_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.wing_sweep_deg_comb)
-        self.connect(self.mw.wing_dist_CG_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.wing_dist_CG_m_comb)
-
-        # Vertical Stabilizer
-        self.connect(self.mw.vert_aspect_ratio_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.vert_aspect_ratio_inp)
-        self.connect(self.mw.vert_taper_ratio_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.vert_taper_ratio_inp)
-        self.connect(self.mw.vert_span_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.vert_span_inp)
-
-        #Vert Unit Conversion
-        self.connect(self.mw.vert_area_sqm_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.vert_area_sqm_comb)
-        self.connect(self.mw.vert_span_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.vert_span_m_comb)
-        self.connect(self.mw.vert_chord_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.vert_chord_m_comb)
-        self.connect(self.mw.vert_long_dist_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.vert_long_dist_m_comb)
-        self.connect(self.mw.vert_lat_dist_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.vert_lat_dist_m_comb)
-
-        # Vertical Sliders
-        d_min = -1*self.aircraft1.cg_location*10
-        d_max = (self.aircraft1.fuse.length-self.aircraft1.cg_location)*10
-        d_curr = d_max
-
-        self.mw.vert_long_dist_slider.setMinimum(d_min)
-        self.mw.vert_long_dist_slider.setMaximum(d_max)
-        self.mw.vert_long_dist_slider.setValue(d_curr)
-        self.mw.vert_long_dist_min_lab.setText(str(d_min/10.0))
-        self.mw.vert_long_dist_max_lab.setText(str(d_max/10.0))
-        self.mw.vert_long_dist_out.setText(str(d_curr/10.0))
-
-        self.connect(self.mw.vert_long_dist_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.vert_long_dist_slider)
-
-        d_min = (-0.5)*self.aircraft1.wing.span*10
-        d_max = 0.5*self.aircraft1.wing.span*10
-        d_curr = 0
-
-        self.mw.vert_lat_dist_slider.setMinimum(d_min)
-        self.mw.vert_lat_dist_slider.setMaximum(d_max)
-        self.mw.vert_lat_dist_slider.setValue(d_curr)
-        self.mw.vert_lat_dist_min_lab.setText(str(d_min/10.0))
-        self.mw.vert_lat_dist_max_lab.setText(str(d_max/10.0))
-        self.mw.vert_lat_dist_out.setText(str(d_curr/10.0))
-
-        self.connect(self.mw.vert_lat_dist_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.vert_lat_dist_slider)
-        # Vertical Push
-        self.connect(self.mw.vert_airfoil_push,QtCore.SIGNAL(_fromUtf8("clicked()")),self.vert_airfoil_push)
         # Other Support
         self.vert_surface_added = []
         self.horiz_surface_added = []
+
         for i in range((self.aircraft1.stab.vt_num+1)):
+            print "fdsd", i
             self.vert_surface_added.append(0)
         for i in range((self.aircraft1.stab.ht_num)+1):
             self.horiz_surface_added.append(0)
 
+    def CG_pos_slider(self,val):
+        self.aircraft1.cg_location = val/10.0
+        t = round((val/10.0),2)
+        self.mw.CG_current_out.setText(str(t))
+
+
+    @pyqtSlot()
+    def horiz_dist_CG_slider(self,val):
+        dist = val/10.0
+        j = self.mw.horiz_surface_comb.currentIndex()
+        self.aircraft1.stab.ht[j].long_dist_CG = dist
+        analysis.horiz_tail_vol_coeff(self.aircraft1)
+        self.mw.horiz_coeff_out.setText(str(self.aircraft1.stab.horiz_vol_coeff))
+        if self.mw.horiz_dist_CG_m_comb.currentText() == "m":
+            self.mw.horiz_dist_CG_out.setText(str(dist))
+        else:
+            self.mw.horiz_dist_CG_out.setText(str(dist*data.Conversion.M_2_FT))
+
+    @pyqtSlot()
+    def horiz_aspect_ratio_inp(self,text):
+        if self.isfloat(text):
+            j = self.mw.horiz_surface_comb.currentIndex()
+            self.aircraft1.stab.ht[j].a_r = float(text)
+            self.aircraft1.stab.ht[j].calc_area()
+            self.aircraft1.stab.ht[j].calc_chord()
+            self.horiz_surface_out()
+        elif text == "":
+            pass
+        else:
+            input_warn = QtGui.QMessageBox()
+            input_warn.setText("Please enter a number")
+            input_warn.exec_()
+
+    @pyqtSlot()
+    def horiz_taper_ratio_inp(self,text):
+        if self.isfloat(text):
+            j = self.mw.horiz_surface_comb.currentIndex()
+            self.aircraft1.stab.ht[j].t_r = float(text)
+            self.aircraft1.stab.ht[j].calc_area()
+            self.aircraft1.stab.ht[j].calc_chord()
+            self.horiz_surface_out()
+        elif text == "":
+            pass
+        else:
+            input_warn = QtGui.QMessageBox()
+            input_warn.setText("Please enter a number")
+            input_warn.exec_()
+
+    @pyqtSlot()
+    def horiz_span_inp(self,text):
+        if self.isfloat(text):
+            j = self.mw.horiz_surface_comb.currentIndex()
+            self.aircraft1.stab.ht[j].span = float(text)
+            self.aircraft1.stab.ht[j].calc_area()
+            self.aircraft1.stab.ht[j].calc_chord()
+            self.horiz_surface_out()
+        elif text == "":
+            pass
+        else:
+            input_warn = QtGui.QMessageBox()
+            input_warn.setText("Please enter a number")
+            input_warn.exec_()
+
+    @pyqtSlot()
+    def horiz_area_sqm_comb(self,val):
+        j = self.mw.horiz_surface_comb.currentIndex()
+        if val =="sq. m":
+            self.mw.horiz_area_out.setText(str(self.aircraft1.stab.ht[j].ref_area))
+        else:
+            t = self.aircraft1.stab.ht[j].ref_area*math.pow(data.Conversion.M_2_FT,2)
+            self.mw.horiz_area_out.setText(str(t))
+
+    @pyqtSlot()
+    def horiz_span_m_comb(self,val):
+        j = self.mw.horiz_surface_comb.currentIndex()
+        if val == "m":
+            t = self.aircraft1.stab.ht[j].span
+            self.mw.horiz_span_inp.setText(str(t))
+        else:
+            t = self.aircraft1.stab.ht[j].span*data.Conversion.M_2_FT
+            self.mw.horiz_span_inp.setText(str(t))
+
+    @pyqtSlot()
+    def horiz_chord_m_comb(self,val):
+        j = self.mw.horiz_surface_comb.currentIndex()
+        if val == "m":
+            self.mw.horiz_chord_out.setText(str(self.aircraft1.stab.ht[j].mean_chord))
+        else:
+            self.mw.horiz_chord_out.setText(str(self.aircraft1.stab.ht[j].mean_chord*data.Conversion.M_2_FT))
+
+    @pyqtSlot()
+    def horiz_dist_CG_m_comb(self,val):
+        j = self.mw.horiz_surface_comb.currentIndex()
+        if val == "m":
+            self.mw.horiz_dist_CG_out.setText(str(self.aircraft1.stab.ht[j].long_dist_CG))
+            self.mw.horiz_dist_CG_min_lab.setText(str(self.mw.horiz_dist_CG_slider.minimum()/10.0))
+            self.mw.horiz_dist_CG_max_lab.setText(str(self.mw.horiz_dist_CG_slider.maximum()/10.0))
+        else:
+            t = round(self.aircraft1.stab.ht[j].long_dist_CG*data.Conversion.M_2_FT,2)
+            self.mw.horiz_dist_CG_out.setText(str(t))
+            t = round((self.mw.horiz_dist_CG_slider.minimum()*data.Conversion.M_2_FT/10.0),2)
+            self.mw.horiz_dist_CG_min_lab.setText(str(t))
+            t = round((self.mw.horiz_dist_CG_slider.maximum()*data.Conversion.M_2_FT/10.0),2)
+            self.mw.horiz_dist_CG_max_lab.setText(str(t))
+
+    @pyqtSlot()
+    def horiz_airfoil_push(self):
+        horiz = AirfoilDialog()
+        result = horiz.exec_()
+        if result == 1:
+            # if self.wing_added == 1:
+            #     self.mw.update_wing_push.setEnabled(True)
+            j = self.mw.horiz_surface_comb.currentIndex()
+            horiz_airfoil = self.aircraft1.stab.ht[j].airfoil
+            horiz_airfoil.max_thickness = float(horiz.ad.dialog_tbyc_inp.text())
+            horiz_airfoil.max_thick_loc = float(horiz.ad.dialog_thick_loc_inp.text())
+            horiz_airfoil.max_cl = float(horiz.ad.dialog_cl_max_inp.text())
+            horiz_airfoil.max_cl_alpha = horiz.ad.dialog_clmax_alpha_sb.value()
+            horiz_airfoil.cruise_cl = float(horiz.ad.dialog_clcr_inp.text())
+            horiz_airfoil.cruise_cl_alpha = horiz.ad.dialog_cl_cr_alpha_sb.value()
+            horiz_airfoil.cd0 = float(horiz.ad.dialog_cdo_inp.text())
+            horiz_airfoil.max_clbycd = float(horiz.ad.dialog_max_clcd_inp.text())
+            horiz_airfoil.max_clbycd_alpha = horiz.ad.dialog_max_clcd_alpha_sb.value
+        horiz.show()
+
+    #  ============
     @pyqtSlot()
     def vert_long_dist_slider(self,val):
         dist = val/10.0
         j = self.mw.vert_surface_comb.currentIndex()
         self.aircraft1.stab.vt[j].long_dist_CG = dist
+        analysis.vert_tail_vol_coeff(self.aircraft1)
+        self.mw.vert_coeff_out.setText(str(self.aircraft1.stab.vert_vol_coeff))
         if self.mw.vert_long_dist_m_comb.currentText() == "m":
             self.mw.vert_long_dist_out.setText(str(dist))
         else:
@@ -539,7 +627,6 @@ class MyWindow(QtGui.QMainWindow):
             self.mw.vert_lat_dist_out.setText(str(dist))
         else:
             self.mw.vert_lat_dist_out.setText(str(dist*data.Conversion.M_2_FT))
-
 
     @pyqtSlot()
     def vert_aspect_ratio_inp(self,text):
@@ -599,27 +686,32 @@ class MyWindow(QtGui.QMainWindow):
     def vert_span_m_comb(self,val):
         j = self.mw.vert_surface_comb.currentIndex()
         if val == "m":
-            t = self.aircraft1.stab.vt[j].span
+            t = round(self.aircraft1.stab.vt[j].span,2)
             self.mw.vert_span_inp.setText(str(t))
         else:
-            t = self.aircraft1.stab.vt[j].span*data.Conversion.M_2_FT
+            t = round(self.aircraft1.stab.vt[j].span*data.Conversion.M_2_FT,2)
             self.mw.vert_span_inp.setText(str(t))
 
     @pyqtSlot()
     def vert_chord_m_comb(self,val):
         j = self.mw.vert_surface_comb.currentIndex()
         if val == "m":
-            self.mw.vert_chord_out.setText(str(self.aircraft1.stab.vt[j].mean_chord))
+            t = round(self.aircraft1.stab.vt[j].mean_chord,2)
+            self.mw.vert_chord_out.setText(str(t))
         else:
-            self.mw.vert_chord_out.setText(str(self.aircraft1.stab.vt[j].mean_chord*data.Conversion.M_2_FT))
+            t = round(self.aircraft1.stab.vt[j].mean_chord*data.Conversion.M_2_FT,2)
+            self.mw.vert_chord_out.setText(str(t))
 
     @pyqtSlot()
     def vert_long_dist_m_comb(self,val):
         j = self.mw.vert_surface_comb.currentIndex()
         if val == "m":
-            self.mw.vert_long_dist_out.setText(str(self.aircraft1.stab.vt[j].long_dist_CG))
-            self.mw.vert_long_dist_min_lab.setText(str(self.mw.vert_long_dist_slider.minimum()/10.0))
-            self.mw.vert_long_dist_max_lab.setText(str(self.mw.vert_long_dist_slider.maximum()/10.0))
+            t = round(self.aircraft1.stab.vt[j].long_dist_CG,2)
+            self.mw.vert_long_dist_out.setText(str(t))
+            t = round((self.mw.vert_long_dist_slider.minimum()/10.0),2)
+            self.mw.vert_long_dist_min_lab.setText(str(t))
+            t = round((self.mw.vert_long_dist_slider.maximum()/10.0),2)
+            self.mw.vert_long_dist_max_lab.setText(str(t))
         else:
             t = round(self.aircraft1.stab.vt[j].long_dist_CG*data.Conversion.M_2_FT,2)
             self.mw.vert_long_dist_out.setText(str(t))
@@ -632,9 +724,12 @@ class MyWindow(QtGui.QMainWindow):
     def vert_lat_dist_m_comb(self,val):
         j = self.mw.vert_surface_comb.currentIndex()
         if val == "m":
-            self.mw.vert_lat_dist_out.setText(str(self.aircraft1.stab.vt[j].lat_dist_CG))
-            self.mw.vert_lat_dist_min_lab.setText(str(self.mw.vert_lat_dist_slider.minimum()/10.0))
-            self.mw.vert_lat_dist_max_lab.setText(str(self.mw.vert_lat_dist_slider.maximum()/10.0))
+            t = round(self.aircraft1.stab.vt[j].lat_dist_CG,2)
+            self.mw.vert_lat_dist_out.setText(str(t))
+            t = round((self.mw.vert_lat_dist_slider.minimum()/10.0),2)
+            self.mw.vert_lat_dist_min_lab.setText(str(t))
+            t = round((self.mw.vert_lat_dist_slider.maximum()/10.0),2)
+            self.mw.vert_lat_dist_max_lab.setText(str(t))
         else:
             t = round(self.aircraft1.stab.vt[j].lat_dist_CG*data.Conversion.M_2_FT,2)
             self.mw.vert_lat_dist_out.setText(str(t))
@@ -642,7 +737,6 @@ class MyWindow(QtGui.QMainWindow):
             self.mw.vert_lat_dist_min_lab.setText(str(t))
             t = round((self.mw.vert_lat_dist_slider.maximum()*data.Conversion.M_2_FT/10.0),2)
             self.mw.vert_lat_dist_max_lab.setText(str(t))
-
 
     @pyqtSlot()
     def flap_type_comb(self,val):
@@ -653,8 +747,6 @@ class MyWindow(QtGui.QMainWindow):
 
     @pyqtSlot()
     def wing_dist_CG_slider(self,val):
-        if self.wing_added == 1:
-            self.mw.update_wing_push.setEnabled(True)
         dist = val/10.0
         self.aircraft1.wing.dist_CG = dist
         if self.mw.wing_dist_CG_m_comb.currentText() == "m":
@@ -662,6 +754,16 @@ class MyWindow(QtGui.QMainWindow):
         else:
             t = round(dist*data.Conversion.M_2_FT,2)
             self.mw.wing_dist_CG_out.setText(str(t))
+
+    @pyqtSlot()
+    def wing_vert_dist_CG_slider(self,val):
+        dist = val/10.0
+        self.aircraft1.wing.vert_dist_CG = dist
+        if self.mw.wing_vert_dist_CG_m_comb.currentText() == "m":
+            self.mw.wing_vert_dist_CG_out.setText(str(dist))
+        else:
+            t = round(dist*data.Conversion.M_2_FT,2)
+            self.mw.wing_vert_dist_CG_out.setText(str(t))
 
     @pyqtSlot()
     def wing_sweep_inp(self,text):
@@ -742,7 +844,7 @@ class MyWindow(QtGui.QMainWindow):
             if self.wing_added == 1:
                 self.mw.update_wing_push.setEnabled(True)
             root_airfoil = self.aircraft1.wing.root_airfoil
-            root_airfoil.max_thickness = float(root.ad.dialog_max_thick_inp.text())
+            root_airfoil.max_thickness = float(root.ad.dialog_tbyc_inp.text())
             root_airfoil.max_thick_loc = float(root.ad.dialog_thick_loc_inp.text())
             root_airfoil.max_cl = float(root.ad.dialog_cl_max_inp.text())
             root_airfoil.max_cl_alpha = root.ad.dialog_clmax_alpha_sb.value()
@@ -761,7 +863,7 @@ class MyWindow(QtGui.QMainWindow):
             if self.wing_added == 1:
                 self.mw.update_wing_push.setEnabled(True)
             tip_airfoil = self.aircraft1.wing.tip_airfoil
-            tip_airfoil.max_thickness = float(tip.ad.dialog_max_thick_inp.text())
+            tip_airfoil.max_thickness = float(tip.ad.dialog_tbyc_inp.text())
             tip_airfoil.max_thick_loc = float(tip.ad.dialog_thick_loc_inp.text())
             tip_airfoil.max_cl = float(tip.ad.dialog_cl_max_inp.text())
             tip_airfoil.max_cl_alpha = tip.ad.dialog_clmax_alpha_sb.value()
@@ -782,7 +884,7 @@ class MyWindow(QtGui.QMainWindow):
             j = self.mw.vert_surface_comb.currentIndex()
             vert_airfoil = self.aircraft1.stab.vt[j].airfoil
 
-            vert_airfoil.max_thickness = float(vert.ad.dialog_max_thick_inp.text())
+            vert_airfoil.max_thickness = float(vert.ad.dialog_tbyc_inp.text())
             vert_airfoil.max_thick_loc = float(vert.ad.dialog_thick_loc_inp.text())
             vert_airfoil.max_cl = float(vert.ad.dialog_cl_max_inp.text())
             vert_airfoil.max_cl_alpha = vert.ad.dialog_clmax_alpha_sb.value()
@@ -813,16 +915,21 @@ class MyWindow(QtGui.QMainWindow):
     @pyqtSlot()
     def wing_chord_m_comb(self,val):
         if val == "m":
-            self.mw.wing_chord_out.setText(str(self.aircraft1.wing.mean_chord))
+            t = round(self.aircraft1.wing.mean_chord,2)
+            self.mw.wing_chord_out.setText(str(t))
         else:
-            self.mw.wing_chord_out.setText(str(self.aircraft1.wing.mean_chord*data.Conversion.M_2_FT))
+            t = round((self.aircraft1.wing.mean_chord*data.Conversion.M_2_FT),2)
+            self.mw.wing_chord_out.setText(str(t))
 
     @pyqtSlot()
     def wing_dist_CG_m_comb(self,val):
         if val == "m":
-            self.mw.wing_dist_CG_out.setText(str(self.aircraft1.wing.dist_CG))
-            self.mw.wing_dist_CG_min_lab.setText(str(self.mw.wing_dist_CG_slider.minimum()/10.0))
-            self.mw.wing_dist_CG_max_lab.setText(str(self.mw.wing_dist_CG_slider.maximum()/10.0))
+            t = round(self.aircraft1.wing.dist_CG,2)
+            self.mw.wing_dist_CG_out.setText(str(t))
+            t = round((self.mw.wing_dist_CG_slider.minimum()/10.0),2)
+            self.mw.wing_dist_CG_min_lab.setText(str(t))
+            t = round((self.mw.wing_dist_CG_slider.maximum()/10.0),2)
+            self.mw.wing_dist_CG_max_lab.setText(str(t))
         else:
             t = round(self.aircraft1.wing.dist_CG*data.Conversion.M_2_FT,2)
             self.mw.wing_dist_CG_out.setText(str(t))
@@ -830,6 +937,23 @@ class MyWindow(QtGui.QMainWindow):
             self.mw.wing_dist_CG_min_lab.setText(str(t))
             t = round((self.mw.wing_dist_CG_slider.maximum()*data.Conversion.M_2_FT/10.0),2)
             self.mw.wing_dist_CG_max_lab.setText(str(t))
+
+    @pyqtSlot()
+    def wing_dist_CG_m_comb(self,val):
+        if val == "m":
+            t = round(self.aircraft1.wing.vert_dist_CG,2)
+            self.mw.wing_vert_dist_CG_out.setText(str(t))
+            t = round((self.mw.wing_vert_dist_CG_slider.minimum()/10.0),2)
+            self.mw.wing_vert_dist_CG_min_lab.setText(str(t))
+            t = round((self.mw.wing_vert_dist_CG_slider.maximum()/10.0),2)
+            self.mw.wing_vert_dist_CG_max_lab.setText(str(t))
+        else:
+            t = round(self.aircraft1.wing.vert_dist_CG*data.Conversion.M_2_FT,2)
+            self.mw.wing_vert_dist_CG_out.setText(str(t))
+            t = round((self.mw.wing_vert_dist_CG_slider.minimum()*data.Conversion.M_2_FT/10.0),2)
+            self.mw.wing_vert_dist_CG_min_lab.setText(str(t))
+            t = round((self.mw.wing_vert_dist_CG_slider.maximum()*data.Conversion.M_2_FT/10.0),2)
+            self.mw.wing_vert_dist_CG_max_lab.setText(str(t))
 
     @pyqtSlot()
     def wing_dihedral_deg_comb(self,val):
@@ -845,6 +969,201 @@ class MyWindow(QtGui.QMainWindow):
         else:
             self.mw.wing_sweep_inp.setText(str(self.aircraft1.wing.sweep_le*data.Conversion.DEG_2_RAD))
 
+    @pyqtSlot()
+    def add_vert_surface_push(self):
+        i = self.mw.vert_surface_comb.count()
+        surf = "Surface "+str(i+1)
+        self.mw.vert_surface_comb.addItem(_fromUtf8(surf))
+        j = self.mw.vert_surface_comb.currentIndex()
+        if j<i:
+            self.mw.rem_vert_surface_push.setEnabled(True)
+        else:
+            self.mw.rem_vert_surface_push.setEnabled(False)
+        if i == 1:
+            self.vert_surface_added[0] = 1
+        else:
+            self.vert_surface_added.append(1)
+
+        self.aircraft1.stab.vt_num += 1
+        self.mw.add_vert_surface_push.setEnabled(False)
+
+    @pyqtSlot()
+    def add_horiz_surface_push(self):
+        i = self.mw.horiz_surface_comb.count()
+        surf = "Surface "+str(i+1)
+        self.mw.horiz_surface_comb.addItem(_fromUtf8(surf))
+        j = self.mw.horiz_surface_comb.currentIndex()
+        if j<1:
+            self.mw.rem_horiz_surface_push.setEnabled(True)
+        else:
+            self.mw.rem_horiz_surface_push.setEnabled(False)
+        if i==1:
+            self.horiz_surface_added[0] = 1
+        else:
+            self.horiz_surface_added.append(1)
+        self.aircraft1.stab.ht_num += 1
+        self.mw.add_horiz_surface_push.setEnabled(False)
+
+
+
+    def wing_data(self):
+
+        # Add airfoil push buttons
+        self.connect(self.mw.root_airfoil_push,QtCore.SIGNAL(_fromUtf8("clicked()")),self.root_airfoil_push)
+        self.connect(self.mw.tip_airfoil_push,QtCore.SIGNAL(_fromUtf8("clicked()")),self.tip_airfoil_push)
+
+        self.connect(self.mw.wing_aspect_ratio_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.wing_aspect_ratio_inp)
+        self.connect(self.mw.wing_taper_ratio_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.wing_taper_ratio_inp)
+        self.connect(self.mw.wing_sweep_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.wing_sweep_inp)
+        self.connect(self.mw.wing_dihedral_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.wing_dihedral_inp)
+
+        # Wing Sliders
+        d_min = -50
+        d_max = 50
+        d_curr = 0
+        self.mw.wing_dist_CG_slider.setMinimum(d_min)
+        self.mw.wing_dist_CG_slider.setMaximum(d_max)
+        self.mw.wing_dist_CG_slider.setValue(d_curr)
+        self.mw.wing_dist_CG_min_lab.setText(str(d_min/10.0))
+        self.mw.wing_dist_CG_max_lab.setText(str(d_max/10.0))
+        self.mw.wing_dist_CG_out.setText(str(d_curr/10.0))
+
+        self.connect(self.mw.wing_dist_CG_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.wing_dist_CG_slider)
+
+        d_min = -10*self.aircraft1.fuse.cabin.outer_height/2
+        d_max = 10*self.aircraft1.fuse.cabin.outer_height/2
+        d_curr = 10*self.aircraft1.fuse.cabin.floor_lowering
+
+        self.mw.wing_vert_dist_CG_slider.setMinimum(d_min)
+        self.mw.wing_vert_dist_CG_slider.setMaximum(d_max)
+        self.mw.wing_vert_dist_CG_slider.setValue(d_curr)
+        self.mw.wing_vert_dist_CG_min_lab.setText(str(d_min/10.0))
+        self.mw.wing_vert_dist_CG_max_lab.setText(str(d_max/10.0))
+        self.mw.wing_vert_dist_CG_out.setText(str(d_curr/10.0))
+
+        self.connect(self.mw.wing_vert_dist_CG_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.wing_vert_dist_CG_slider)
+
+        self.connect(self.mw.flap_type_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")),self.flap_type_comb)
+
+        # Unit Conversions
+        self.connect(self.mw.planform_area_sqm_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.planform_area_sqm_comb)
+        self.connect(self.mw.wingspan_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.wingspan_m_comb)
+        self.connect(self.mw.wing_chord_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.wing_chord_m_comb)
+        self.connect(self.mw.wing_dihedral_deg_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.wing_dihedral_deg_comb)
+        self.connect(self.mw.wing_sweep_deg_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.wing_sweep_deg_comb)
+        self.connect(self.mw.wing_dist_CG_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.wing_dist_CG_m_comb)
+
+    def vert_surf_data(self):
+
+        self.connect(self.mw.vert_surface_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.vert_surface_comb)
+        # Vertical Stabilizer
+        self.connect(self.mw.vert_aspect_ratio_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.vert_aspect_ratio_inp)
+        self.connect(self.mw.vert_taper_ratio_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.vert_taper_ratio_inp)
+        self.connect(self.mw.vert_span_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.vert_span_inp)
+
+        # Vertical Unit Conversion
+
+        self.connect(self.mw.vert_area_sqm_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.vert_area_sqm_comb)
+        self.connect(self.mw.vert_span_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.vert_span_m_comb)
+        self.connect(self.mw.vert_chord_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.vert_chord_m_comb)
+        self.connect(self.mw.vert_long_dist_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.vert_long_dist_m_comb)
+        self.connect(self.mw.vert_lat_dist_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.vert_lat_dist_m_comb)
+
+        # Vertical Sliders
+        self.connect(self.mw.vert_long_dist_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.vert_long_dist_slider)
+        self.connect(self.mw.vert_lat_dist_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.vert_lat_dist_slider)
+
+        # Vertical Push
+        self.connect(self.mw.vert_airfoil_push,QtCore.SIGNAL(_fromUtf8("clicked()")),self.vert_airfoil_push)
+
+        self.connect(self.mw.add_vert_surface_push,QtCore.SIGNAL(_fromUtf8("clicked()")),self.add_vert_surface_push)
+        self.connect(self.mw.rem_vert_surface_push,QtCore.SIGNAL(_fromUtf8("clicked()")),self.rem_vert_surface_push)
+
+        # Checkbox
+        self.connect(self.mw.fuse_symmetry_check,QtCore.SIGNAL(_fromUtf8("stateChanged(int)")),self.fuse_symmetry_check)
+
+    @pyqtSlot()
+    def fuse_symmetry_check(self,val):
+        j = self.mw.vert_surface_comb.currentIndex()
+        self.aircraft1.stab.vt[j].fuse_symm = val/2
+        if val == 2:
+            s = "Surface "+str(j+1)+" (symm)"
+        else:
+            s = "Surface "+str(j+1)
+        self.mw.vert_surface_comb.setItemText(j,s)
+
+    @pyqtSlot()
+    def rem_vert_surface_push(self):
+        j = self.mw.vert_surface_comb.currentIndex()
+        self.mw.vert_surface_comb.removeItem(j)
+        i = j
+        while i<self.mw.vert_surface_comb.count():
+            surf = "Surface "+(i+1)
+            self.aircraft1.stab.vt[i-1] = self.aircraft1.stab.vt[i]
+            self.vert_surface_comb.setItemText(i, _translate("MainWindow",surf, None))
+        n = self.aircraft1.stab.vt_num
+        self.aircraft1.stab.vt.pop((n-1))
+        self.aircraft1.stab.vt_num -= 1
+
+    @pyqtSlot()
+    def vert_surface_comb(self, val):
+        print "Inside", val
+        if (val+1) != self.mw.vert_surface_comb.count():
+            print "1st case"
+            self.vert_surface_out()
+            self.mw.add_vert_surface_push.setEnabled(False)
+            self.mw.rem_vert_surface_push.setEnabled(True)
+        else:
+            print "2nd case"
+            self.mw.add_vert_surface_push.setEnabled(True)
+            self.mw.rem_vert_surface_push.setEnabled(False)
+
+    @pyqtSlot()
+    def rem_horiz_surface_push(self):
+        j = self.mw.horiz_surface_comb.currentIndex()
+        self.mw.horiz_surface_comb.removeItem(j)
+        # self.mw.horiz_surface_comb.setCurrentIndex(j)
+        i = j
+        while i < self.mw.horiz_surface_comb.count():
+            surf = "Surface "+str(i+1)
+            self.aircraft1.stab.ht[i-1] = self.aircraft1.stab.ht[i]
+            self.horiz_surface_comb.setItemText(i, _translate("MainWindow",surf, None))
+        n = self.aircraft1.stab.ht_num
+        self.aircraft1.stab.ht_num.pop((n-1))
+        self.aircraft1.stab.ht_num -= 1
+
+    @pyqtSlot()
+    def horiz_surface_comb(self,val):
+        j = self.mw.horiz_surface_comb.currentIndex()
+        if j<self.mw.horiz_surface_comb.count():
+            self.horiz_surface_out()
+        elif j == self.horiz_surface_comb.count():
+            self.mw.add_horiz_surface_push.setEnabled(True)
+            self.mw.rem_horiz_surface_push.setEnabled(False)
+
+    def horiz_surf_data(self):
+        self.connect(self.mw.horiz_surface_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.horiz_surface_comb)
+        # Horizontal Stabilizer
+
+        self.connect(self.mw.horiz_aspect_ratio_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.horiz_aspect_ratio_inp)
+        self.connect(self.mw.horiz_taper_ratio_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.horiz_taper_ratio_inp)
+        self.connect(self.mw.horiz_span_inp,QtCore.SIGNAL(_fromUtf8("textChanged(QString)")),self.horiz_span_inp)
+
+        # Horizontal Unit Conversion
+
+        self.connect(self.mw.horiz_area_sqm_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.horiz_area_sqm_comb)
+        self.connect(self.mw.horiz_span_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.horiz_span_m_comb)
+        self.connect(self.mw.horiz_chord_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.horiz_chord_m_comb)
+        self.connect(self.mw.horiz_dist_CG_m_comb,QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.horiz_dist_CG_m_comb)
+
+        # Horizontal Sliders
+
+        self.connect(self.mw.horiz_dist_CG_slider,QtCore.SIGNAL(_fromUtf8("valueChanged(int)")),self.horiz_dist_CG_slider)
+
+        # Horizontal Push
+        self.connect(self.mw.horiz_airfoil_push,QtCore.SIGNAL(_fromUtf8("clicked()")),self.horiz_airfoil_push)
+        self.connect(self.mw.add_horiz_surface_push,QtCore.SIGNAL(_fromUtf8("clicked()")),self.add_horiz_surface_push)
+
     def wing_stab_set_defaults(self):
         # Wing Defaults
         self.aircraft1.wing.calc_ref_area(self.aircraft1)
@@ -856,12 +1175,79 @@ class MyWindow(QtGui.QMainWindow):
         self.wing_out()
 
         # Vertical Stab
+        self.vert_set_defaults()
+
+        # Horizontal Stab
+        self.horiz_set_defaults()
+
+    def horiz_set_defaults(self):
+        j = self.mw.horiz_surface_comb.currentIndex()
+
+        self.mw.horiz_aspect_ratio_inp.setText(str(self.aircraft1.stab.ht[0].a_r))
+        self.mw.horiz_taper_ratio_inp.setText(str(self.aircraft1.stab.ht[0].t_r))
+        self.mw.horiz_span_inp.setText(str(self.aircraft1.stab.ht[0].span))
+        self.mw.horiz_chord_out.setText(str(self.aircraft1.stab.ht[0].mean_chord))
+        self.mw.horiz_area_out.setText(str(self.aircraft1.stab.ht[0].ref_area))
+        self.mw.horiz_dihedral_out.setText(str(self.aircraft1.stab.ht[0].dihedral))
+
+        self.aircraft1.stab.ht[j].long_dist_CG = self.aircraft1.fuse.length-self.aircraft1.cg_location
+        d_min = -1*self.aircraft1.cg_location*10
+        d_max = (self.aircraft1.stab.ht[0].long_dist_CG)*10
+        d_curr = d_max
+
+        self.mw.horiz_dist_CG_slider.setMinimum(d_min)
+        self.mw.horiz_dist_CG_slider.setMaximum(d_max)
+        self.mw.horiz_dist_CG_slider.setValue(d_curr)
+        t = round((d_min/10.0),2)
+        self.mw.horiz_dist_CG_min_lab.setText(str(t))
+        t = round((d_max/10.0),2)
+        self.mw.horiz_dist_CG_max_lab.setText(str(t))
+        t = round((d_curr/10.0),2)
+        self.mw.horiz_dist_CG_out.setText(str(t))
+
+        self.horiz_surface_out()
+
+    def vert_set_defaults(self):
+        j = self.mw.vert_surface_comb.currentIndex()
         self.mw.vert_aspect_ratio_inp.setText(str(self.aircraft1.stab.vt[0].a_r))
         self.mw.vert_taper_ratio_inp.setText(str(self.aircraft1.stab.vt[0].t_r))
         self.mw.vert_span_inp.setText(str(self.aircraft1.stab.vt[0].span))
         self.mw.vert_chord_out.setText(str(self.aircraft1.stab.vt[0].mean_chord))
         self.mw.vert_area_out.setText(str(self.aircraft1.stab.vt[0].ref_area))
 
+        # Longitude Slider
+        self.aircraft1.stab.vt[j].long_dis_CG = self.aircraft1.fuse.length-self.aircraft1.cg_location
+        d_min = -1*self.aircraft1.cg_location*10
+        d_max = self.aircraft1.stab.vt[j].long_dist_CG*10
+        d_curr = d_max
+
+        self.mw.vert_long_dist_slider.setMinimum(d_min)
+        self.mw.vert_long_dist_slider.setMaximum(d_max)
+        self.mw.vert_long_dist_slider.setValue(d_curr)
+        t = round((d_min/10.0),2)
+        self.mw.vert_long_dist_min_lab.setText(str(t))
+        t = round((d_max/10.0),2)
+        self.mw.vert_long_dist_max_lab.setText(str(t))
+        t = round((d_curr/10.0),2)
+        self.mw.vert_long_dist_out.setText(str(t))
+
+        # Latitude Slider
+        self.aircraft1.stab.vt[j].lat_dist_CG = 0
+        d_min = (-0.5)*self.aircraft1.wing.span*10
+        d_max = 0.5*self.aircraft1.wing.span*10
+        d_curr = self.aircraft1.stab.vt[j].lat_dist_CG
+
+        self.mw.vert_lat_dist_slider.setMinimum(d_min)
+        self.mw.vert_lat_dist_slider.setMaximum(d_max)
+        self.mw.vert_lat_dist_slider.setValue(d_curr)
+        t = round((d_min/10.0),2)
+        self.mw.vert_lat_dist_min_lab.setText(str(t))
+        t = round((d_max/10.0),2)
+        self.mw.vert_lat_dist_max_lab.setText(str(t))
+        t = round((d_curr/10.0),2)
+        self.mw.vert_lat_dist_out.setText(str(t))
+
+        self.vert_surface_out()
 
     def wing_out(self):
         if self.mw.wingspan_m_comb.currentText() == "m":
@@ -883,8 +1269,25 @@ class MyWindow(QtGui.QMainWindow):
     def vert_surface_out(self):
         j = self.mw.vert_surface_comb.currentIndex()
         vt = self.aircraft1.stab.vt[j]
-        self.mw.vert_chord_out.setText(str(vt.mean_chord))
-        self.mw.vert_area_out.setText(str(vt.ref_area))
+        t = round(vt.mean_chord,2)
+        self.mw.vert_chord_out.setText(str(t))
+        t = round(vt.ref_area,2)
+        self.mw.vert_area_out.setText(str(t))
+        self.mw.fuse_symmetry_check.setCheckState(vt.fuse_symm*2)
+        analysis.vert_tail_vol_coeff(self.aircraft1)
+        t = round(self.aircraft1.stab.vert_vol_coeff,2)
+        self.mw.vert_coeff_out.setText(str(t))
+
+    def horiz_surface_out(self):
+        j = self.mw.horiz_surface_comb.currentIndex()
+        ht = self.aircraft1.stab.ht[j]
+        t = round(ht.mean_chord,2)
+        self.mw.horiz_chord_out.setText(str(t))
+        t = round(ht.ref_area,2)
+        self.mw.horiz_area_out.setText(str(t))
+        analysis.horiz_tail_vol_coeff(self.aircraft1)
+        t = round(self.aircraft1.stab.horiz_vol_coeff,2)
+        self.mw.horiz_coeff_out.setText(str(t))
 
     #Graph Sliders
     @pyqtSlot()
@@ -893,51 +1296,9 @@ class MyWindow(QtGui.QMainWindow):
         actual = self.req1.roc
         self.req1.roc = val/10.0
         self.mw.roc_current_out.setText(str(val/10.0))
-        # r = self.req1
-        # a = self.aircraft1
-        # m = self.mission1
-        #
-        # # Rate of Climb
-        # roc = analysis.PlotConst()
-        # roc.name = "roc"
-        # g = r.roc/a.v_climb
-        # c=0
-        # j=0
-        # i=0
-        # roc.t_by_w[0] = 0.4
-        # while roc.t_by_w[i] < roc.tbyw_end:
-        #     if j==0:
-        #         roc.t_by_w[0] = 0.4 + c
-        #     else:
-        #         roc.t_by_w.append(roc.t_by_w[0]+c)
-        #         i += 1
-        #     q = 0.5*data.Atmospheric_param.rho(m.segments[0].height,r.roc_isa_t)*math.pow(a.v_climb,2)
-        #     k = math.pi*a.wing.a_r*a.wing.e
-        #     exp = math.pow((roc.t_by_w[j] - g), 2) - 4*a.cd0/k
-        #
-        #     if exp >= 0:
-        #         term = roc.t_by_w[j] - g
-        #         if term-math.sqrt(exp) >= 0:
-        #             if j == 0:
-        #                 roc.w_by_s[j] = min(term+math.sqrt(exp),term-math.sqrt(exp))*q*k/2
-        #             else:
-        #                 roc.w_by_s.append(min(term+math.sqrt(exp),term-math.sqrt(exp))*q*k/2)
-        #             j += 1
-        #         elif term+math.sqrt(exp) >= 0:
-        #             if j == 0:
-        #                 roc.w_by_s[j] = (term+math.sqrt(exp))*q*k/2
-        #             else:
-        #                 roc.w_by_s.append((term+math.sqrt(exp))*q*k/2)
-        #             j += 1
-        #
-        #     c += 0.005
-        #
-        # roc.num_data = len(roc.w_by_s)
-        # r.constraints[3] = roc
         analysis.constraint(self.req1,self.aircraft1,self.mission1)
         t2 = time.time()
         print "Process time", (t2-t1)
-
         self.plot_constraints()
         self.req1.roc = actual
 
@@ -1209,7 +1570,6 @@ class MyWindow(QtGui.QMainWindow):
         self.profile.setScene(self.scene)
 
     def plot_constraints(self):
-
         for i in range(len(self.req1.constraints)):
             self.constraint_plots.append(self.mw.pw.plot())
             if self.req1.constraints[i].name == "togr":
@@ -2169,7 +2529,7 @@ class MyWindow(QtGui.QMainWindow):
 
     @pyqtSlot()
     def set_fuse_param_push(self):
-        self.wing_stab_set_defaults()
+        self.wing_stab()
         self.mw.tabWidget.setCurrentIndex(4)
 
     @pyqtSlot()
@@ -2352,4 +2712,19 @@ class AirfoilDialog(QtGui.QDialog):
         self.ad.setupUi(self)
         # self.show()
 
+class ConstraintGraph(pg.PlotWidget):
+    def __init__(self):
+        super(ConstraintGraph, self).__init__()
 
+    def mousePressEvent(self, event):
+        super(ConstraintGraph, self).mousePressEvent(event)
+        print "test 1"
+        self.offset = event.pos()
+        print self.offset.x()
+        print self.offset.y()
+
+    def mouseDragEvent(self,event):
+        pass
+
+    def mouseMoveEvent(self,event):
+        pass

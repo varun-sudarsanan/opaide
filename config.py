@@ -49,7 +49,7 @@ class Aircraft:
         # Defining parts of the aircraft
         self.wing = Aircraft.Wing()
         self.fuse = Aircraft.Fuselage()
-        self.stab = Aircraft.Stabilizer(self.fuse, self.wing)
+        self.stab = Aircraft.Stabilizer()
         self.prop = Aircraft.PowerPlant()
     class Container:
         def __init__(self):
@@ -91,7 +91,7 @@ class Aircraft:
         def update_fuse_thickness(self):
             self.fuselage_thickness = (0.084 + 0.045*self.inner_eq_dia)/2
 
-    class Wing:
+    class Wing(object):
         """Class for defining the wing configuration"""
 
         def __init__(self):
@@ -100,7 +100,8 @@ class Aircraft:
             self.sweep_le = 0       # Sweep angle at chord position with maximum t/c
             self.ref_area = 81.03   # m2
             self.dihedral = 0       # deg
-            self.dist_CG = 0
+            self.dist_CG = 0        # m
+            self.vert_dist_CG = 0   # m
 
             self.span = math.sqrt(self.a_r*self.ref_area)   # Span of the wing planform
             self.root_chord = 2*self.ref_area/(self.span*(1+self.t_r))
@@ -116,20 +117,24 @@ class Aircraft:
             self.flap = Flap()
 
         def calc_ref_area(self,a):
-            self.ref_area = a.gross_weight/a.w_by_s
+            if a.w_by_s!=0:
+                self.ref_area = a.gross_weight/a.w_by_s
         def calc_span(self):
             self.span = math.sqrt(self.a_r*self.ref_area)   # Span of the wing planform
         def calc_chord(self):
-            self.root_chord = 2*self.ref_area/(self.span*(1+self.t_r))
-            self.tip_chord = self.root_chord*self.t_r
-            self.mean_chord = (self.tip_chord+self.root_chord)/2
+            if self.span!=0:
+                self.root_chord = 2*self.ref_area/(self.span*(1+self.t_r))
+                self.tip_chord = self.root_chord*self.t_r
+                self.mean_chord = (self.tip_chord+self.root_chord)/2
         def calc_sweep(self):
-            self.sweep = math.atan((self.a_r*math.tan(self.sweep_le)-4*data.Historic_param.MAX_T_BY_C_POS*(1-self.t_r)/(1+self.t_r))/self.a_r)
+            if self.a_r!=0:
+                self.sweep = math.atan((self.a_r*math.tan(self.sweep_le)-4*data.Historic_param.MAX_T_BY_C_POS*(1-self.t_r)/(1+self.t_r))/self.a_r)
         def calc_e(self):
             self.e = 2/(2-self.a_r+math.sqrt(4+math.pow(self.a_r,2)*(1+math.pow(math.tan(self.sweep),2))))
 
         def calc_area(self):
-            self.ref_area = math.pow(self.span,2)/self.a_r
+            if self.a_r!=0:
+                self.ref_area = math.pow(self.span,2)/self.a_r
 
     class Fuselage:
         def __init__(self):
@@ -150,37 +155,40 @@ class Aircraft:
             self.tail_offset = self.tail_offset2dia*self.cabin.outer_eq_dia/2
             self.length = self.cabin.length + self.nose_length - self.nose_offset + self.tail_length - self.tail_offset
 
+    class HorizontalTail(Wing):
+        def __init__(self):
+            Aircraft.Wing.__init__(self)
+            self.a_r = 4
+            self.t_r = 0.5
+            self.long_dist_CG = 1.8
+            self.ref_area = 17.41
+
+    class VerticalTail(Wing):
+        def __init__(self):
+            Aircraft.Wing.__init__(self)
+            self.a_r = 1.5
+            self.t_r = 0.4
+            self.ref_area = 9.07
+            self.long_dist_CG = 1.8
+            self.lat_dist_CG = 0
+            self.fuse_symm = 0
+
     class Stabilizer:
-        def __init__(self,fuse,wing):
+        def __init__(self):
             self.config = 1
             self.vt_num = 0
             self.ht_num = 0
-            self.arm_length = fuse.cabin.length/2 + fuse.tail_length
-
-            self.ht = [Aircraft.Wing()]
-            self.ht[0].a_r = 4
-            self.ht[0].t_r = 0.5
-            self.ht[0].ref_area = data.Historic_param.HT_COEFF*wing.mean_chord*wing.ref_area/self.arm_length
+            self.horiz_vol_coeff = 0
+            self.vert_vol_coeff = 0
+            self.ht = [Aircraft.HorizontalTail()]
             self.ht[0].calc_span()
             self.ht[0].calc_chord()
-            self.ht[0].long_dist_CG = 0
 
-            self.vt = [Aircraft.Wing()]
-            self.vt[0].a_r = 1.5
-            self.vt[0].t_r = 0.4
-            self.vt[0].ref_area = data.Historic_param.VT_COEFF*wing.span*wing.ref_area/self.arm_length
+            self.vt = [Aircraft.VerticalTail()]
             self.vt[0].calc_span()
             self.vt[0].calc_chord()
-            self.vt[0].long_dist_CG = 0
-            self.vt[0].lat_dist_CG = 0
-
 
     class PowerPlant:
         def __init__(self):
-            self.engines_num = 2
-
-    def update_config(self):
-        print "update_config"
-        if self.pass_n > 9:
             self.engines_num = 2
 

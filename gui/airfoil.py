@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'AirfoilDialog.ui'
 #
-# Created: Tue Apr 21 04:24:10 2015
+# Created: Sat Apr 25 19:32:34 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -82,10 +82,10 @@ class Ui_Dialog(object):
         self.label_9 = QtGui.QLabel(Dialog)
         self.label_9.setObjectName(_fromUtf8("label_9"))
         self.gridLayout.addWidget(self.label_9, 1, 0, 1, 1)
-        self.dialog_max_thick_inp = QtGui.QLineEdit(Dialog)
-        self.dialog_max_thick_inp.setMaximumSize(QtCore.QSize(100, 16777215))
-        self.dialog_max_thick_inp.setObjectName(_fromUtf8("dialog_max_thick_inp"))
-        self.gridLayout.addWidget(self.dialog_max_thick_inp, 1, 1, 1, 1)
+        self.dialog_tbyc_inp = QtGui.QLineEdit(Dialog)
+        self.dialog_tbyc_inp.setMaximumSize(QtCore.QSize(100, 16777215))
+        self.dialog_tbyc_inp.setObjectName(_fromUtf8("dialog_tbyc_inp"))
+        self.gridLayout.addWidget(self.dialog_tbyc_inp, 1, 1, 1, 1)
         self.label_10 = QtGui.QLabel(Dialog)
         self.label_10.setObjectName(_fromUtf8("label_10"))
         self.gridLayout.addWidget(self.label_10, 1, 2, 1, 1)
@@ -133,7 +133,7 @@ class Ui_Dialog(object):
         self.label_6.setText(_translate("Dialog", "[deg]", None))
         self.label_7.setText(_translate("Dialog", "at alpha", None))
         self.label_4.setText(_translate("Dialog", "Cd0", None))
-        self.label_9.setText(_translate("Dialog", "Max. Thickness %", None))
+        self.label_9.setText(_translate("Dialog", "Airfoil t/c:", None))
         self.label_10.setText(_translate("Dialog", "Location %", None))
         self.label_11.setText(_translate("Dialog", "Max. Cl/Cd", None))
         self.label_12.setText(_translate("Dialog", "at alpha", None))
