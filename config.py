@@ -6,20 +6,23 @@ import math
 class Airfoil:
     def __init__(self):
         self.name = "None"
-        self.cruise_cl = 1
+        self.cruise_cl = 0.5
         self.cruise_cl_alpha = 0
         self.max_cl = 2
         self.max_cl_alpha = 15
-        self.max_thickness = 0
+        self.t_by_c = 0
         self.max_thick_loc = 0
         self.cd0 = 0
         self.max_clbycd = 0
         self.max_clbycd_alpha = 0
 
-class Flap:
+class HighLiftDevice:
     def __init__(self):
         self.type = "None"
-        self.flap_factor = 1
+        self.factor = 1.0
+        self.span_percent = 0.0
+
+
 class Aircraft:
     def __init__(self):
         self.gross_weight = 0.0
@@ -36,6 +39,7 @@ class Aircraft:
 
         self.v_stall = 25.2
         self.v_cruise = data.Historic_param.TP_CRUISE*5/18
+        self.cruise_alt = 7500
         self.v_climb = data.Historic_param.CLIMB_STALL*self.v_stall
 
         self.l_by_d_cruise = data.Historic_param.CRUISE_MAX*data.Historic_param.L_BY_D_MAX
@@ -113,8 +117,7 @@ class Aircraft:
 
             self.root_airfoil = Airfoil()
             self.tip_airfoil = Airfoil()
-            self.airfoil = Airfoil()
-            self.flap = Flap()
+            self.high_lift_device = HighLiftDevice()
 
         def calc_ref_area(self,a):
             if a.w_by_s!=0:
@@ -162,6 +165,9 @@ class Aircraft:
             self.t_r = 0.5
             self.long_dist_CG = 1.8
             self.ref_area = 17.41
+            self.airfoil = Airfoil()
+            Aircraft.Wing.calc_span(self)
+            Aircraft.Wing.calc_chord(self)
 
     class VerticalTail(Wing):
         def __init__(self):
@@ -172,6 +178,9 @@ class Aircraft:
             self.long_dist_CG = 1.8
             self.lat_dist_CG = 0
             self.fuse_symm = 0
+            self.airfoil = Airfoil()
+            Aircraft.Wing.calc_span(self)
+            Aircraft.Wing.calc_chord(self)
 
     class Stabilizer:
         def __init__(self):
@@ -181,12 +190,8 @@ class Aircraft:
             self.horiz_vol_coeff = 0
             self.vert_vol_coeff = 0
             self.ht = [Aircraft.HorizontalTail()]
-            self.ht[0].calc_span()
-            self.ht[0].calc_chord()
-
             self.vt = [Aircraft.VerticalTail()]
-            self.vt[0].calc_span()
-            self.vt[0].calc_chord()
+            self.type = "Conventional"
 
     class PowerPlant:
         def __init__(self):

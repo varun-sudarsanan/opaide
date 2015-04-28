@@ -238,7 +238,7 @@ def cabin_cs_sizing(a):
 
 def horiz_tail_vol_coeff(a):
     p = 0
-    for i in range(a.stab.ht_num+1):
+    for i in range(a.stab.ht_num):
         p += a.stab.ht[i].ref_area*a.stab.ht[i].long_dist_CG
         print "In", p
 
@@ -253,3 +253,40 @@ def vert_tail_vol_coeff(a):
         p += a.stab.vt[i].ref_area*a.stab.vt[i].long_dist_CG
     if a.wing.ref_area!=0 and a.wing.span!=0:
         a.stab.vert_vol_coeff = p/(a.wing.ref_area*a.wing.span)
+
+
+def lift_estimation(a,p):
+    print "In Lift"
+    w = a.wing
+    m1 = 2.0*(w.tip_airfoil.cruise_cl-w.root_airfoil.cruise_cl)/w.span
+    c1 = w.root_airfoil.cruise_cl
+    m2 = (w.tip_chord-w.root_chord)*2.0/w.span
+    c2 = w.root_chord
+    rho = data.Atmospheric_param.rho(a.cruise_alt,0)
+    x = 0
+    L = 0
+
+    while x <= (w.span/2.0):
+        c = m2*x + c2
+        lift_coeff = m1*x + c1
+        L += rho*math.pow(a.v_cruise,2)*c*x*lift_coeff
+        x += 0.01
+    L = L*a.wing.high_lift_device.factor
+
+
+    for i in range(a.stab.ht_num):
+        h = a.stab.ht[i]
+        if h.long_dist_CG <0 :
+            L += 0.5*rho*math.pow(a.v_cruise,2)*h.ref_area*h.airfoil.cruise_cl
+        else:
+            L -= 0.5*rho*math.pow(a.v_cruise,2)*h.ref_area*h.airfoil.cruise_cl
+
+    print "Value of L", L/9.8
+    p.lift = L
+
+class Performance:
+    def __init__(self):
+        self.lift = 0
+
+
+

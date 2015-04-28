@@ -28,9 +28,10 @@ class Atmospheric_param:
             return Atmospheric_param.T_ISA + Atmospheric_param.TROP_LAPSE*11000
         else:
             return 0
+
     @staticmethod
     def pres(alt):
-        return (Atmospheric_param.P_ISA*math.pow((Atmospheric_param.temp(alt)/Atmospheric_param.T_ISA),(Atmospheric_param.g*Atmospheric_param.M_air/(Atmospheric_param.R*Atmospheric_param.TROP_LAPSE*1000))))
+        return (Atmospheric_param.P_ISA*math.pow((Atmospheric_param.temp(alt)/Atmospheric_param.T_ISA),(Atmospheric_param.g*Atmospheric_param.M_air/(Atmospheric_param.R*(-1)*Atmospheric_param.TROP_LAPSE*1000))))
 
     @staticmethod
     def rho(alt,temp):
@@ -170,10 +171,10 @@ class Historic_param:
         # =============================================XX================================
     class Wing:
         @staticmethod
-        def flap_factor(flap_type):
-            if flap_type == "None":
+        def high_lift_factor(device_type):
+            if device_type == "None":
                 return 1
-            elif flap_type == "Fowler":
+            elif device_type == "Fowler":
                 return 2.5
     class Passenger:
         # Data for 95% American Male

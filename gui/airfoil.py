@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'AirfoilDialog.ui'
 #
-# Created: Sat Apr 25 19:32:34 2015
+# Created: Tue Apr 28 04:56:25 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -110,6 +110,9 @@ class Ui_Dialog(object):
         self.label_13 = QtGui.QLabel(Dialog)
         self.label_13.setObjectName(_fromUtf8("label_13"))
         self.gridLayout.addWidget(self.label_13, 7, 4, 1, 1)
+        self.label_14 = QtGui.QLabel(Dialog)
+        self.label_14.setObjectName(_fromUtf8("label_14"))
+        self.gridLayout.addWidget(self.label_14, 1, 4, 1, 1)
         self.verticalLayout_2.addLayout(self.gridLayout)
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
@@ -134,8 +137,10 @@ class Ui_Dialog(object):
         self.label_7.setText(_translate("Dialog", "at alpha", None))
         self.label_4.setText(_translate("Dialog", "Cd0", None))
         self.label_9.setText(_translate("Dialog", "Airfoil t/c:", None))
-        self.label_10.setText(_translate("Dialog", "Location %", None))
+        self.label_10.setText(_translate("Dialog", "Max. Thickness\n"
+"Location", None))
         self.label_11.setText(_translate("Dialog", "Max. Cl/Cd", None))
         self.label_12.setText(_translate("Dialog", "at alpha", None))
         self.label_13.setText(_translate("Dialog", "[deg]", None))
+        self.label_14.setText(_translate("Dialog", "[%]", None))
 
